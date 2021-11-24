@@ -1,7 +1,17 @@
+'''
+* @Author: Yuang Tong  
+* @Date: 2021-11-24 14:15:19  
+* @Last Modified by:   Yuang Tong  
+* @Last Modified time: 2021-11-24 14:15:19 
+''' 
 import os
 import argparse
+import sys
+sys.path.append('../')
 
-def GetAudioFileList(Dataset_dir='./Dataset/IEMOCAP/IEMOCAP_full_release'):
+from configure.config import Emoconfig
+
+def GetAudioFileList(Dataset_dir='../dataset/IEMOCAP/IEMOCAP_full_release'):
     AudioFileList = list()
     LableFileList = list()
 
@@ -50,12 +60,13 @@ def GetAudioLabels(File_dir):
     names = list()
     labels = list()
     lines = read_txt(File_dir)
+    emoconfig = Emoconfig()
     for idx,line in enumerate(lines):
         if line.startswith('['):
             name = line.split('\t')[1]
             lbl = line.split('\t')[2]
             if lbl == 'xxx':
-                lbl = abbrev_for_emo(lines[idx+1].split('\t')[1].split(';')[0])
+                lbl = emoconfig.AbbrevEmoDict[lines[idx+1].split('\t')[1].split(';')[0]]
         
             names.append(name)
             labels.append(lbl)
@@ -87,30 +98,12 @@ def GetFullAudioandLabels(AudioFileList,LabelFileList,output_dir = './test.txt')
         f.close()
     
     print('Total audio piece number: {}'.format(len(writeseq)))    
-    
-def abbrev_for_emo(emo_in):
-    if emo_in in ['Frustration','frustration']:
-        return 'fru'
-    if emo_in in ['Neutral','neutral']:
-        return 'neu'
-    if emo_in in ['Anger','anger']:
-        return 'ang'
-    if emo_in in ['Other','other']:
-        return 'neu'
-    if emo_in in ['Sadness','sadness']:
-        return 'sad'
-    if emo_in in ['Excited','excited']:
-        return 'exc'
-    if emo_in in ['Happiness','happiness']:
-        return 'hap'
-    if emo_in in ['Surprise','surprise']:
-        return 'sup'
-    return emo_in
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-dir',type=str,default='./Dataset/IEMOCAP/IEMOCAP_full_release',help='dataset dir')
-    parser.add_argument('-o',type=str,default='./test.txt',help='dataset dir')
+    parser.add_argument('-dir',type=str,default='../dataset/IEMOCAP/IEMOCAP_full_release',help='dataset dir')
+    parser.add_argument('-o',type=str,default='../dataset/IEMOCAP/Audio.txt',help='output file')
     args = parser.parse_args()
 
     AudioFileList,LableFileList = GetAudioFileList(args.dir)
