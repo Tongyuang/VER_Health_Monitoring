@@ -7,7 +7,9 @@
 import os
 import argparse
 import sys
-sys.path.append('../')
+sys.path.append('../../')
+
+from configure.config import CH_SIMS_dir
 
 import pandas as pd
 
@@ -61,7 +63,7 @@ def GenDescFile(CH_SIMS_Dir,output_file):
 
 if __name__ == '__main__':
     
-    CH_SIMS_Dir = '/home/tongyuang/Dataset/VER/Dataset/CH_SIMS/Raw'
+    CH_SIMS_Dir = CH_SIMS_dir
     output_file = '/home/tongyuang/Dataset/VER/Dataset/CH_SIMS/Audio.txt'
     GenDescFile(CH_SIMS_Dir,output_file)
     print('Description File are stored at %s'%output_file)

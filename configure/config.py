@@ -1,11 +1,17 @@
 import shutil
 import os
 
+
+
+# Dataset Dir
+CH_SIMS_dir = '/home/tongyuang/Dataset/VER/Dataset/CH_SIMS/Raw'
+IEMOCAP_dir = '/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/IEMOCAP_full_release'
+
 class DataPreConfig():
     def __init__(self):
         self.dataset_names = ['IEMOCAP','CH_SIMS']
         self.raw_wav_list = {
-            key:os.path.join('key','Audio.txt') for key in self.dataset_names
+            key: os.path.join(key,'Audio.txt') for key in self.dataset_names
         }
         # parameters when extracting features:
         self.hop_length = 512

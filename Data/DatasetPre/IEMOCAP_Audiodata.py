@@ -7,9 +7,9 @@
 import os
 import argparse
 import sys
-sys.path.append('../')
+sys.path.append('../../')
 
-from configure.config import Emoconfig
+from configure.config import Emoconfig,IEMOCAP_dir
 
 def GetAudioFileList(Dataset_dir):
     AudioFileList = list()
@@ -105,7 +105,7 @@ def GetFullAudioandLabels(AudioFileList,LabelFileList,output_dir = './test.txt')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-dir',type=str,default='/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/IEMOCAP_full_release',help='dataset dir')
+    parser.add_argument('-dir',type=str,default=IEMOCAP_dir,help='dataset dir')
     parser.add_argument('-o',type=str,default='/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/Audio.txt',help='output file')
     args = parser.parse_args()
 
