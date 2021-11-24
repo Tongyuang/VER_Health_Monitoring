@@ -20,6 +20,7 @@ class DataPreConfig():
             "valid":0.15,
             "test":0.10
         } 
+        self.random_state = 1228
 
 class Emoconfig():
     def __init__(self):

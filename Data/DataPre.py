@@ -67,7 +67,6 @@ class DataPreProcessor():
         for name in self._DataPreConfig.dataset_names:
             filedir = self._DataPreConfig.raw_wav_list[name]
             self.AudioEmbeddings[name] = {
-                'name':[],
                 'feature':[],
                 'lengths':[],
                 'reg_lbl':[]
@@ -80,7 +79,6 @@ class DataPreProcessor():
 
                     # load data
                     feature = self.getSingleAudioEmbd(wav_dir)
-                    self.AudioEmbeddings[name]['name'].append(wav_name)
                     self.AudioEmbeddings[name]['feature'].append(feature)
                     self.AudioEmbeddings[name]['lengths'].append(len(feature))
                     self.AudioEmbeddings[name]['reg_lbl'].append(reg_lbl)
@@ -88,6 +86,8 @@ class DataPreProcessor():
     def getFinalAudioEmbedding(self):
         # get final embedding
         self.getAudioEmbeddings()
+        self.split_mode = ['train','valid','test']
+        
         self.FinalAudioEmbeddings = {name:{} for name in self.AudioEmbeddings.keys()}
 
         for name in self.AudioEmbeddings.keys():
@@ -101,27 +101,58 @@ class DataPreProcessor():
             final_feature_lengths = mean+3*std
             num_samples = len(lengths)
             feature_dim = len(self.AudioEmbeddings[name]['feature'][0][-1])
-            self.FinalAudioEmbeddings[name]['feature'] = np.zeros((num_samples,final_feature_lengths,feature_dim))
 
-            # final lbl
-            self.FinalAudioEmbeddings[name]['reg_lbl'] = np.zeros((num_samples,1))
-            self.FinalAudioEmbeddings[name]['cls_lbl'] = np.zeros((num_samples,1))
+            feature = np.zeros((num_samples,final_feature_lengths,feature_dim))
+            reg_lbls = np.zeros((num_samples,1))
 
             for idx in range(len(self.AudioEmbeddings[name]['feature'])):
                 # feature
                 fea = self.AudioEmbeddings[name]['feature'][idx]
-                self.FinalAudioEmbeddings[name]['feature'][idx] = self.padding(fea,final_feature_lengths)
+                feature[idx] = self.padding(fea,final_feature_lengths)
                 
                 # lbl
                 reg_lbl = self.AudioEmbeddings[name]['reg_lbl'][idx]
-                self.FinalAudioEmbeddings[name]['reg_lbl'][idx] = reg_lbl
-                self.FinalAudioEmbeddings[name]['cls_lbl'][idx] = self._Emoconfig.Reg2ClsLblCvtr(reg_lbl)
+                reg_lbls[idx] = reg_lbl
             
+            # split
+            feature_vi,feature_test,lbl_vi,lbl_test = train_test_split(
+                feature,
+                reg_lbls,
+                test_size=self._DataPreConfig.split_ratio["test"],
+                random_state=self._DataPreConfig.random_state
+            )
 
+            feature_train,feature_valid,lbl_train,lbl_valid = train_test_split(
+                feature_vi,
+                lbl_vi,
+                test_size = self._DataPreConfig.split_ratio["valid"]/(1-self._DataPreConfig.split_ratio["test"]),
+                random_state=self._DataPreConfig.random_state
+            )
+            feature_dict = {'train':feature_train,'valid':feature_valid,'test':feature_test}
+            lbl_dict = {'train':lbl_train,'valid':lbl_valid,'test':lbl_test}
 
+            # to FinalAudioEmbeddings
+            self.FinalAudioEmbeddings[name] = {mode:{} for mode in self.split_mode.keys()}
 
- 
-        
+            for mode in self.split_mode.keys():
+                cur_feature = feature_dict[mode]
+                cur_reg_lbl = lbl_dict[mode]
+                num_samples = len(cur_reg_lbl)
+                # to finalaudioembeddings
+                self.FinalAudioEmbeddings[name][mode]['feature'] =  cur_feature
+                self.FinalAudioEmbeddings[name][mode]['num_samples'] = num_samples
+                self.FinalAudioEmbeddings[name][mode]['reg_lbls'] = cur_reg_lbl
+                self.FinalAudioEmbeddings[name][mode]['cls_lbls'] = self.Reg2ClsCvtr(cur_reg_lbl)
+
+            
+    def Reg2ClsCvtr(self,reg_lbls_in):
+        assert reg_lbls_in.shape[-1]==1
+        cls_lbls = np.zeros(reg_lbls_in.shape[0],1)
+        for idx in range(len(reg_lbls_in)):
+             cls_lbls[idx] = self._Emoconfig.Reg2ClsLblCvtr(reg_lbls_in[idx])
+
+        return cls_lbls
+
     def SaveFeature(self):
         self.SplitData()
         for name in self.FinalAudioEmbeddings.keys():
