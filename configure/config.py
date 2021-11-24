@@ -7,6 +7,13 @@ class DataPreConfig():
         self.raw_wav_list = {
             key: 'dataset/'+key+'/Audio.txt' for key in self.dataset_names
         }
+        # parameters when extracting features:
+        self.hop_length = 512
+
+        # parameters when padding:
+        # MAXLEN = mean+3*std
+        
+        self.Audio_MAXLEN = 100 
 
 class Emoconfig():
     def __init__(self):
