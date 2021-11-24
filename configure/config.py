@@ -1,18 +1,18 @@
 import shutil
-
+import os
 
 class DataPreConfig():
     def __init__(self):
         self.dataset_names = ['IEMOCAP','CH_SIMS']
         self.raw_wav_list = {
-            key: 'dataset/'+key+'/Audio.txt' for key in self.dataset_names
+            key:os.path.join('key','Audio.txt') for key in self.dataset_names
         }
         # parameters when extracting features:
         self.hop_length = 512
 
         # parameters when padding:
         # MAXLEN = mean+3*std
-        self.Audio_MAXLEN = 100
+        #self.Audio_MAXLEN = 100
 
         # split paras
         self.split_ratio = {
@@ -27,8 +27,9 @@ class Emoconfig():
         self.Annotation = {
             "ang":-1,
             "sad":-0.6,
-            "fear":-0.4,
+            "fea":-0.4,
             "fru":-0.2,
+            "dis":-0.2,
             "neu":0,
             "hap":0.4,
             "sur":0.6,
@@ -37,16 +38,16 @@ class Emoconfig():
         }
         
         self.AbbrevEmoDict = {
-            "fear":"fea",
-            "frustration":"fru",
-            "neutral":"neu",
-            "anger":"ang",
-            "sadness":"sad",
-            "excited":"exc",
-            "happiness":"hap",
-            "surprise":"sur",
-            "other":"oth",
-            "disappointed":"fru"
+            "Fear":"fea",
+            "Frustration":"fru",
+            "Neutral":"neu",
+            "Anger":"ang",
+            "Sadness":"sad",
+            "Excited":"exc",
+            "Happiness":"hap",
+            "Surprise":"sur",
+            "Other":"oth",
+            "Disappointed":"fru"
         }
 
 

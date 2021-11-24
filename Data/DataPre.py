@@ -17,9 +17,12 @@ import numpy as np
 import sklearn
 from sklearn.model_selection import train_test_split
 
+from tqdm import tqdm
+
 class DataPreProcessor():
     def __init__(self,args):
         self.work_dir = args.work_dir
+        self.data_dir = args.data_dir
         self._DataPreConfig = DataPreConfig()
         self._Emoconfig = Emoconfig()
         self.padding_mode = args.padding_mode
@@ -74,7 +77,8 @@ class DataPreProcessor():
 
             full_filedir = os.path.join(self.work_dir,filedir)
             with open(full_filedir,"r") as f:
-                for line in f.readlines():
+                print('start calculating feature of %s'%name)
+                for line in tqdm(f.readlines()):
                     wav_name,wav_dir,_,reg_lbl = line.strip('\t')
 
                     # load data
@@ -105,7 +109,9 @@ class DataPreProcessor():
             feature = np.zeros((num_samples,final_feature_lengths,feature_dim))
             reg_lbls = np.zeros((num_samples,1))
 
-            for idx in range(len(self.AudioEmbeddings[name]['feature'])):
+            print('start calculating output feature of %s'%name)
+            
+            for idx in tqdm(range(len(self.AudioEmbeddings[name]['feature']))):
                 # feature
                 fea = self.AudioEmbeddings[name]['feature'][idx]
                 feature[idx] = self.padding(fea,final_feature_lengths)
@@ -154,10 +160,10 @@ class DataPreProcessor():
         return cls_lbls
 
     def SaveFeature(self):
-        self.SplitData()
+        self.getFinalAudioEmbedding()
         for name in self.FinalAudioEmbeddings.keys():
             suffix = '.pkl'
-            output_dir = os.path.join(self.work_dir,'dataset',name)
+            output_dir = os.path.join(self.data_dir,name)
             output_file = os.path.join(output_dir,'feature'+suffix)
             if os.path.exists(output_file):
                 os.remove(output_file)
@@ -174,6 +180,7 @@ def parse_args():
 
     parser.add_argument('--work_dir', type=str, default='../',
                         help='work dir')
+    parser.add_argument('--data_dir',type=str,default='/home/tongyuang/Dataset/VER/Dataset/')
     parser.add_argument('--padding_mode', type=str, default="zeros",
                         help='support [\'zeros\',\'normal\']')
     parser.add_argument('--padding_loc', type=str, default="back",

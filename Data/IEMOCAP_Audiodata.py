@@ -59,6 +59,7 @@ def read_txt(txt_file_dir):
 def GetAudioLabels(File_dir):
     names = list()
     labels = list()
+    reg_lbls = list()
     lines = read_txt(File_dir)
     emoconfig = Emoconfig()
     for idx,line in enumerate(lines):
@@ -70,19 +71,21 @@ def GetAudioLabels(File_dir):
         
             names.append(name)
             labels.append(lbl)
+            reg_lbls.append(emoconfig.Annotation[lbl])
+            
     
-    return (names,labels)
+    return (names,labels,reg_lbls)
 
 def GetFullAudioandLabels(AudioFileList,LabelFileList,output_dir = './test.txt'):
     FullNames = list()
     Fulllbls = list()
-
+    FullRegLbls = list()
     for filename in LabelFileList:
-        names,lbls = GetAudioLabels(filename)
+        names,lbls,reg_lbls = GetAudioLabels(filename)
         FullNames += names
         Fulllbls += lbls
-    
-    assert(len(FullNames)==len(Fulllbls) and len(Fulllbls)==len(AudioFileList))
+        FullRegLbls += reg_lbls
+    assert(len(FullNames)==len(Fulllbls) and len(Fulllbls)==len(AudioFileList) and len(FullRegLbls)==len(FullNames))
     
     # output
     if os.path.exists(output_dir):
@@ -91,7 +94,7 @@ def GetFullAudioandLabels(AudioFileList,LabelFileList,output_dir = './test.txt')
     writeseq = list()
     for idx in range(len(AudioFileList)):
         assert FullNames[idx] in AudioFileList[idx]
-        writeseq.append("{}\t{}\t{}\n".format(FullNames[idx],AudioFileList[idx],Fulllbls[idx]))
+        writeseq.append("{}\t{}\t{}\t{}\n".format(FullNames[idx],AudioFileList[idx],Fulllbls[idx],FullRegLbls[idx]))
         
     with open(output_dir,"w") as f:
         f.writelines(writeseq)
@@ -102,8 +105,8 @@ def GetFullAudioandLabels(AudioFileList,LabelFileList,output_dir = './test.txt')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-dir',type=str,default='~/Dataset/VER/Dataset/IEMOCAP/IEMOCAP_full_release',help='dataset dir')
-    parser.add_argument('-o',type=str,default='~/Dataset/VER/Dataset/IEMOCAP/Audio.txt',help='output file')
+    parser.add_argument('-dir',type=str,default='/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/IEMOCAP_full_release',help='dataset dir')
+    parser.add_argument('-o',type=str,default='/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/Audio.txt',help='output file')
     args = parser.parse_args()
 
     AudioFileList,LableFileList = GetAudioFileList(args.dir)
