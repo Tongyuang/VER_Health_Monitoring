@@ -12,8 +12,14 @@ class DataPreConfig():
 
         # parameters when padding:
         # MAXLEN = mean+3*std
-        
-        self.Audio_MAXLEN = 100 
+        self.Audio_MAXLEN = 100
+
+        # split paras
+        self.split_ratio = {
+            "train":0.75,
+            "valid":0.15,
+            "test":0.10
+        } 
 
 class Emoconfig():
     def __init__(self):

@@ -14,6 +14,9 @@ import librosa
 import argparse
 import numpy as np
 
+import sklearn
+from sklearn.model_selection import train_test_split
+
 class DataPreProcessor():
     def __init__(self,args):
         self.work_dir = args.work_dir
@@ -113,10 +116,14 @@ class DataPreProcessor():
                 reg_lbl = self.AudioEmbeddings[name]['reg_lbl'][idx]
                 self.FinalAudioEmbeddings[name]['reg_lbl'][idx] = reg_lbl
                 self.FinalAudioEmbeddings[name]['cls_lbl'][idx] = self._Emoconfig.Reg2ClsLblCvtr(reg_lbl)
+            
 
+
+
+ 
         
     def SaveFeature(self):
-        self.getFinalAudioEmbedding()
+        self.SplitData()
         for name in self.FinalAudioEmbeddings.keys():
             suffix = '.pkl'
             output_dir = os.path.join(self.work_dir,'dataset',name)
