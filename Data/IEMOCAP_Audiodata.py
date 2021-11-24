@@ -11,7 +11,7 @@ sys.path.append('../')
 
 from configure.config import Emoconfig
 
-def GetAudioFileList(Dataset_dir='../dataset/IEMOCAP/IEMOCAP_full_release'):
+def GetAudioFileList(Dataset_dir):
     AudioFileList = list()
     LableFileList = list()
 
@@ -102,8 +102,8 @@ def GetFullAudioandLabels(AudioFileList,LabelFileList,output_dir = './test.txt')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-dir',type=str,default='../dataset/IEMOCAP/IEMOCAP_full_release',help='dataset dir')
-    parser.add_argument('-o',type=str,default='../dataset/IEMOCAP/Audio.txt',help='output file')
+    parser.add_argument('-dir',type=str,default='~/Dataset/VER/Dataset/IEMOCAP/IEMOCAP_full_release',help='dataset dir')
+    parser.add_argument('-o',type=str,default='~/Dataset/VER/Dataset/IEMOCAP/Audio.txt',help='output file')
     args = parser.parse_args()
 
     AudioFileList,LableFileList = GetAudioFileList(args.dir)
