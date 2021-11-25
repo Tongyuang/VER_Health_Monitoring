@@ -1,7 +1,13 @@
-#* @Author: Yuang Tong  
-#* @Date: 2021-11-24 14:05:54  
-#* @Last Modified by:   Yuang Tong  
-#* @Last Modified time: 2021-11-24 14:05:54 
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+'''
+@File    :   DataPre.py
+@Last Modified    :   2021/11/25 18:12:26
+@Author  :   Yuang Tong 
+@Contact :   yuangtong1999@gmail.com
+'''
+
+# here put the import lib
 
 import sys 
 sys.path.append("../") 
@@ -45,6 +51,7 @@ class DataPreProcessor():
         assert self.padding_loc in ['front','back']
 
         length = feature.shape[0]
+        
         if length > MAX_LEN:
             # cut
             start = int((length-MAX_LEN)/2)
@@ -60,7 +67,8 @@ class DataPreProcessor():
         else:
             mean,std = feature.mean(),feature.std()
             pad = np.random.normal(mean,std,(pad_len,feature.shape[-1]))
-            feature = np.concatenate([pad, feature], axis=0) if(self.padding_loc == "front") else \
+            
+        feature = np.concatenate([pad, feature], axis=0) if(self.padding_loc == "front") else \
                   np.concatenate((feature, pad), axis=0)
         
         return feature
@@ -79,7 +87,7 @@ class DataPreProcessor():
             with open(full_filedir,"r") as f:
                 print('start calculating feature of %s'%name)
                 for line in tqdm(f.readlines()):
-                    wav_name,wav_dir,_,reg_lbl = line.strip('\t')
+                    (wav_name,wav_dir,_,reg_lbl) = line.split('\t')
 
                     # load data
                     feature = self.getSingleAudioEmbd(wav_dir)
@@ -102,7 +110,7 @@ class DataPreProcessor():
             mean,std = np.mean(lengths),np.std(lengths)
 
             # final feature
-            final_feature_lengths = mean+3*std
+            final_feature_lengths = int(mean+3*std)
             num_samples = len(lengths)
             feature_dim = len(self.AudioEmbeddings[name]['feature'][0][-1])
 
@@ -114,6 +122,7 @@ class DataPreProcessor():
             for idx in tqdm(range(len(self.AudioEmbeddings[name]['feature']))):
                 # feature
                 fea = self.AudioEmbeddings[name]['feature'][idx]
+ 
                 feature[idx] = self.padding(fea,final_feature_lengths)
                 
                 # lbl
@@ -138,9 +147,9 @@ class DataPreProcessor():
             lbl_dict = {'train':lbl_train,'valid':lbl_valid,'test':lbl_test}
 
             # to FinalAudioEmbeddings
-            self.FinalAudioEmbeddings[name] = {mode:{} for mode in self.split_mode.keys()}
+            self.FinalAudioEmbeddings[name] = {mode:{} for mode in self.split_mode}
 
-            for mode in self.split_mode.keys():
+            for mode in self.split_mode:
                 cur_feature = feature_dict[mode]
                 cur_reg_lbl = lbl_dict[mode]
                 num_samples = len(cur_reg_lbl)
@@ -153,10 +162,9 @@ class DataPreProcessor():
             
     def Reg2ClsCvtr(self,reg_lbls_in):
         assert reg_lbls_in.shape[-1]==1
-        cls_lbls = np.zeros(reg_lbls_in.shape[0],1)
+        cls_lbls = np.zeros((reg_lbls_in.shape[0],1))
         for idx in range(len(reg_lbls_in)):
-             cls_lbls[idx] = self._Emoconfig.Reg2ClsLblCvtr(reg_lbls_in[idx])
-
+            cls_lbls[idx] = self._Emoconfig.Reg2ClsLblCvtr(reg_lbls_in[idx][0])
         return cls_lbls
 
     def SaveFeature(self):
@@ -170,7 +178,7 @@ class DataPreProcessor():
             
             try:
                 with open(output_file,'wb') as wf:
-                    pickle.dump(self.FinalAudioEmbeddings[name],wf,protocal=4)
+                    pickle.dump(self.FinalAudioEmbeddings[name],wf)
                 print('Features are saved in %s .'%output_file)
             except:
                 print("Cannot Save Features at {}".format(output_file))

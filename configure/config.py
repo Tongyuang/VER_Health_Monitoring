@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+'''
+@File    :   config.py
+@Last Modified    :   2021/11/25 18:12:55
+@Author  :   Yuang Tong 
+@Contact :   yuangtong1999@gmail.com
+'''
+
+# here put the import lib
+
+
 import shutil
 import os
 
@@ -7,11 +19,13 @@ import os
 CH_SIMS_dir = '/home/tongyuang/Dataset/VER/Dataset/CH_SIMS/Raw'
 IEMOCAP_dir = '/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/IEMOCAP_full_release'
 
+WORK_dir = '/home/tongyuang/code/VER_Health_Monitoring'
+
 class DataPreConfig():
     def __init__(self):
         self.dataset_names = ['IEMOCAP','CH_SIMS']
         self.raw_wav_list = {
-            key: os.path.join(key,'Audio.txt') for key in self.dataset_names
+            key: os.path.join(WORK_dir,'Data','AudioDir',key+'_Audio.txt') for key in self.dataset_names
         }
         # parameters when extracting features:
         self.hop_length = 512
@@ -57,7 +71,7 @@ class Emoconfig():
         }
 
 
-    def Reg2ClsLblCvtr(reg_lbl_in): # regress label -> class label
+    def Reg2ClsLblCvtr(self,reg_lbl_in): # regress label -> class label
         if reg_lbl_in>0: # Positive
             return 2
         elif reg_lbl_in==0:  # Neutral

@@ -1,9 +1,13 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 '''
-* @Author: Yuang Tong  
-* @Date: 2021-11-24 18:41:00
-* @Last Modified by:   Yuang Tong  
-* @Last Modified time: 2021-11-24 18:41:00
-''' 
+@File    :   CHSIMS_Audiodata.py
+@Time    :   2021/11/25 18:11:46
+@Author  :   Yuang Tong 
+@Version :   1.0
+@Contact :   yuangtong1999@gmail.com
+'''
+
 import os
 import argparse
 import sys
@@ -34,8 +38,8 @@ def GetAudioLbls(CH_SIMS_Dir):
 
     audio_lbl_dir = os.path.join(CH_SIMS_Dir,'SIMS-label.csv')
     audio_lbl = pd.read_csv(audio_lbl_dir)
-    AudioRegLbls = list(audio_lbl['annotation'].values)
-    AudioCls = list(audio_lbl['label_A'].values)
+    AudioCls = list(audio_lbl['annotation'].values)
+    AudioRegLbls = list(audio_lbl['label_A'].values)
     
     return AudioRegLbls,AudioCls
 
@@ -64,7 +68,7 @@ def GenDescFile(CH_SIMS_Dir,output_file):
 if __name__ == '__main__':
     
     CH_SIMS_Dir = CH_SIMS_dir
-    output_file = '/home/tongyuang/Dataset/VER/Dataset/CH_SIMS/Audio.txt'
+    output_file = '../AudioDir/CH_SIMS_Audio.txt'
     GenDescFile(CH_SIMS_Dir,output_file)
     print('Description File are stored at %s'%output_file)
     
