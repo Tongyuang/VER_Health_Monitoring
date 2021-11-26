@@ -1,0 +1,34 @@
+DATASET IEMOCAP
+mode: train
+key:feature,shape:(7529, 588, 33)
+key:num_samples,value:7529
+key:reg_lbls,shape:(7529, 1)
+key:cls_lbls,shape:(7529, 1)
+mode: valid
+key:feature,shape:(1506, 588, 33)
+key:num_samples,value:1506
+key:reg_lbls,shape:(1506, 1)
+key:cls_lbls,shape:(1506, 1)
+mode: test
+key:feature,shape:(1004, 588, 33)
+key:num_samples,value:1004
+key:reg_lbls,shape:(1004, 1)
+key:cls_lbls,shape:(1004, 1)
+--------------------
+DATASET CH_SIMS
+mode: train
+key:feature,shape:(1710, 402, 33)
+key:num_samples,value:1710
+key:reg_lbls,shape:(1710, 1)
+key:cls_lbls,shape:(1710, 1)
+mode: valid
+key:feature,shape:(342, 402, 33)
+key:num_samples,value:342
+key:reg_lbls,shape:(342, 1)
+key:cls_lbls,shape:(342, 1)
+mode: test
+key:feature,shape:(229, 402, 33)
+key:num_samples,value:229
+key:reg_lbls,shape:(229, 1)
+key:cls_lbls,shape:(229, 1)
+--------------------

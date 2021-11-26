@@ -13,7 +13,7 @@ import argparse
 import sys
 sys.path.append('../../')
 
-from configure.config import CH_SIMS_dir
+from configure.config import DataPreConfig
 
 import pandas as pd
 
@@ -67,7 +67,8 @@ def GenDescFile(CH_SIMS_Dir,output_file):
 
 if __name__ == '__main__':
     
-    CH_SIMS_Dir = CH_SIMS_dir
+    config = DataPreConfig()
+    CH_SIMS_Dir = config.CH_SIMS_dir
     output_file = '../AudioDir/CH_SIMS_Audio.txt'
     GenDescFile(CH_SIMS_Dir,output_file)
     print('Description File are stored at %s'%output_file)

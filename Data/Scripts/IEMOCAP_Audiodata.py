@@ -9,7 +9,7 @@ import argparse
 import sys
 sys.path.append('../../')
 
-from configure.config import Emoconfig,IEMOCAP_dir
+from configure.config import Emoconfig,IEMOCAP_dir,DataPreConfig
 
 def GetAudioFileList(Dataset_dir):
     AudioFileList = list()
@@ -105,11 +105,12 @@ def GetFullAudioandLabels(AudioFileList,LabelFileList,output_dir = './test.txt')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-dir',type=str,default=IEMOCAP_dir,help='dataset dir')
     parser.add_argument('-o',type=str,default='/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/Audio.txt',help='output file')
     args = parser.parse_args()
 
-    AudioFileList,LableFileList = GetAudioFileList(args.dir)
+    config = DataPreConfig()
+    IEMOCAP_dir = config.IEMOCAP_dir
+    AudioFileList,LableFileList = GetAudioFileList(IEMOCAP_dir)
     GetFullAudioandLabels(AudioFileList,LableFileList,args.o)
 
     print('Audio data shortcut are stored at:{}'.format(args.o))

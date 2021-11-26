@@ -26,13 +26,16 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 class DataPreProcessor():
-    def __init__(self,args):
-        self.work_dir = args.work_dir
-        self.data_dir = args.data_dir
+    def __init__(self):
         self._DataPreConfig = DataPreConfig()
         self._Emoconfig = Emoconfig()
-        self.padding_mode = args.padding_mode
-        self.padding_loc = args.padding_loc
+        
+        self.work_dir = self._DataPreConfig.WORK_dir
+        self.data_dir = self._DataPreConfig.DATA_dir
+        
+        self.dataset_names = self._DataPreConfig.dataset_names
+        self.padding_mode = self._DataPreConfig.padding_mode
+        self.padding_loc = self._DataPreConfig.padding_loc
         
 
     def getSingleAudioEmbd(self,wav_dir): # generate single audio embedding
@@ -74,8 +77,8 @@ class DataPreProcessor():
         return feature
 
     def getAudioEmbeddings(self):# generate full audio embedding
-        self.AudioEmbeddings = {name:{} for name in self._DataPreConfig.dataset_names}
-        for name in self._DataPreConfig.dataset_names:
+        self.AudioEmbeddings = {name:{} for name in self.dataset_names}
+        for name in self.dataset_names:
             filedir = self._DataPreConfig.raw_wav_list[name]
             self.AudioEmbeddings[name] = {
                 'feature':[],
@@ -170,9 +173,7 @@ class DataPreProcessor():
     def SaveFeature(self):
         self.getFinalAudioEmbedding()
         for name in self.FinalAudioEmbeddings.keys():
-            suffix = '.pkl'
-            output_dir = os.path.join(self.data_dir,name)
-            output_file = os.path.join(output_dir,'feature'+suffix)
+            output_file = self._DataPreConfig.feature_store_dir[name]
             if os.path.exists(output_file):
                 os.remove(output_file)
             
@@ -183,23 +184,9 @@ class DataPreProcessor():
             except:
                 print("Cannot Save Features at {}".format(output_file))
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('--work_dir', type=str, default='../',
-                        help='work dir')
-    parser.add_argument('--data_dir',type=str,default='/home/tongyuang/Dataset/VER/Dataset/')
-    parser.add_argument('--padding_mode', type=str, default="zeros",
-                        help='support [\'zeros\',\'normal\']')
-    parser.add_argument('--padding_loc', type=str, default="back",
-                        help='support [\'front\',\'back\']')
-    return parser.parse_args()
-
-
 if __name__ == "__main__":
-    args = parse_args()
 
-    datapreprocessor = DataPreProcessor(args)
+    datapreprocessor = DataPreProcessor()
     datapreprocessor.SaveFeature()
 
     

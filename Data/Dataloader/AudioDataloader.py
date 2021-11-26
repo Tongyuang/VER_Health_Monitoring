@@ -7,5 +7,5 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset,DataLoader
 
 class AudioDataset(Dataset):
-    def __init__(self,args,)
+    def __init__(self,args)
 

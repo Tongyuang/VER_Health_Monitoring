@@ -14,25 +14,29 @@ import shutil
 import os
 
 
-
-# Dataset Dir
-CH_SIMS_dir = '/home/tongyuang/Dataset/VER/Dataset/CH_SIMS/Raw'
-IEMOCAP_dir = '/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/IEMOCAP_full_release'
-
-WORK_dir = '/home/tongyuang/code/VER_Health_Monitoring'
-
 class DataPreConfig():
     def __init__(self):
+        
+        self.WORK_dir = '/home/tongyuang/code/VER_Health_Monitoring'
+        
+        # Dataset Dir
+        self.DATA_dir = '/home/tongyuang/Dataset/VER/Dataset/'
+        self.CH_SIMS_dir = '/home/tongyuang/Dataset/VER/Dataset/CH_SIMS/Raw'
+        self.IEMOCAP_dir = '/home/tongyuang/Dataset/VER/Dataset/IEMOCAP/IEMOCAP_full_release'
+        
         self.dataset_names = ['IEMOCAP','CH_SIMS']
         self.raw_wav_list = {
-            key: os.path.join(WORK_dir,'Data','AudioDir',key+'_Audio.txt') for key in self.dataset_names
+            key: os.path.join(self.WORK_dir,'Data','AudioDir',key+'_Audio.txt') for key in self.dataset_names
         }
+        
+        
         # parameters when extracting features:
         self.hop_length = 512
-
+        
         # parameters when padding:
-        # MAXLEN = mean+3*std
-        #self.Audio_MAXLEN = 100
+        self.padding_mode = "zeros" #["zeros","normal"]
+        self.padding_loc = "front" # ["front","back"]
+        
 
         # split paras
         self.split_ratio = {
@@ -41,6 +45,16 @@ class DataPreConfig():
             "test":0.10
         } 
         self.random_state = 1228
+        
+        # output feature
+        self.suffix = '.pkl'       
+        self.feature_store_dir = {
+            name:os.path.join(self.DATA_dir,name,'feature'+self.suffix) for name in self.dataset_names
+        }
+        
+        # feature_statistics
+        
+        self.feature_statistics_dir = os.path.join(self.WORK_dir,'Data','Scripts','Statistics.txt')
 
 class Emoconfig():
     def __init__(self):
