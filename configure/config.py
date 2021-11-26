@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 '''
 @File    :   config.py
-@Last Modified    :   2021/11/25 18:12:55
+@Last Modified    :   2021/11/26 14:58:49
 @Author  :   Yuang Tong 
 @Contact :   yuangtong1999@gmail.com
 '''
@@ -50,10 +50,8 @@ class DataPreConfig():
         self.suffix = '.pkl'       
         self.feature_store_dir = {
             name:os.path.join(self.DATA_dir,name,'feature'+self.suffix) for name in self.dataset_names
-        }
-        
+        }      
         # feature_statistics
-        
         self.feature_statistics_dir = os.path.join(self.WORK_dir,'Data','Scripts','Statistics.txt')
 
 class Emoconfig():
@@ -93,4 +91,8 @@ class Emoconfig():
         else:  # Negative
             return 0
 
+class DataLoaderConfig():
+    def __init__(self):
         
+        self.BatchSize = 128
+        self.num_worker = 8
