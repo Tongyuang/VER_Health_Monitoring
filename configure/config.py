@@ -96,3 +96,43 @@ class DataLoaderConfig():
         
         self.BatchSize = 128
         self.num_worker = 8
+
+class Model_ATFN_Config():
+    def __init__(self):
+        
+        self.mode = 'reg' # must in ['reg','cls']
+        
+        self.commonParas = {
+            'need_data_aligned': False,
+            'need_model_aligned': False,
+            'need_normalized': True,
+            'early_stop': 8
+        }
+        
+        self.datasetParas = {
+            'feature_dim':33,
+            'hidden_dim': 32,
+            'dropout': 0.2,
+            'post_drouput':0.2,
+            
+            'num_classes' :3,
+            
+            
+            'text_out': 256,
+            'post_fusion_dim': 64,
+            'post_text_dim': 64,
+            'post_audio_dim': 4,
+            'post_video_dim': 8,
+            'dropouts': (0.2,0.2,0.2),
+            'post_dropouts': (0.2,0.2,0.2,0.2),
+            'batch_size': 64,
+            'learning_rate': 5e-3,
+            'M': 0.6,
+            'T': 0.4,
+            'A': 0.0,
+            'V': 1.0,
+            'text_weight_decay': 1e-3,
+            'audio_weight_decay': 1e-4,
+            'video_weight_decay': 1e-5,
+            'weight_decay': 0.005
+        }
