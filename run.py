@@ -11,17 +11,26 @@
 
 import pickle
 import numpy as np
+from utils.CUDAinit import CUDA_Init
+from utils.ModelUtils import count_parameters
+from model.ATFN import ATFN
+from Data.Dataloader.AudioDataloader import AudioDataLoader
 
-Feature_Dir = '/home/tongyuang/Dataset/VER/Dataset/CH_SIMS/feature.pkl'
+def start():
+    # load device
+    device_name,device = CUDA_Init()
+    print("using device:{}".format(device_name))
+    
+    dataloader = AudioDataLoader()
+    model = ATFN().to(device)
+    
+    print("This Model has {} trainable parameters".format(count_parameters(model)))
 
-with open(Feature_Dir,'rb') as rf:
-    data = pickle.load(rf)
+if __name__ == '__main__':
+    start()
+    
 
-modes = ['train','valid','test']
+    
 
-for mod in modes:
-    print("mode:",mod)
-    for key in data[mod].keys():
-        print("key:{},shape:{}".format(key,data[mod][key].shape) if type(data[mod][key])==np.ndarray else \
-            "key:{},value:{}".format(key,data[mod][key]))
+
     
