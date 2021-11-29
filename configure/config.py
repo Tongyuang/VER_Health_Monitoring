@@ -135,7 +135,7 @@ class Logger_Config():
         self.DataPreConfig = DataPreConfig()
         self.FORMAT = '%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'
         self.LEVEL = logging.DEBUG
-        self.dir = os.path.join(self.DataPreConfig.WORK_dir,'logs')
+        self.dir = os.path.join(self.DataPreConfig.WORK_dir,'results','logs')
 
         self.FILEMODE = 'a'
         
