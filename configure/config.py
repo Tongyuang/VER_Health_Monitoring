@@ -12,6 +12,7 @@
 
 import shutil
 import os
+import logging
 
 
 class DataPreConfig():
@@ -114,7 +115,7 @@ class Model_ATFN_Config():
         
         self.ModelParas = {
             'feature_dim':33,
-            'hidden_dim': 64,
+            'hidden_dim': 32,
             'dropout': 0.2,
             
             'post_hidden_dim':4,
@@ -125,7 +126,16 @@ class Model_ATFN_Config():
             'activation':'leaky_relu', # must in ['relu','leaky_relu','tanh']
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
             
-            'batch_size': 64,
             'learning_rate': 5e-3,
             'weight_decay': 1e-4,
         }
+
+class Logger_Config():
+    def __init__(self):
+        self.DataPreConfig = DataPreConfig()
+        self.FORMAT = '%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'
+        self.LEVEL = logging.DEBUG
+        self.dir = os.path.join(self.DataPreConfig.WORK_dir,'logs')
+
+        self.FILEMODE = 'a'
+        
