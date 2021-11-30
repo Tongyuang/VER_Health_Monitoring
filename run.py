@@ -9,11 +9,12 @@
 
 # here put the import lib
 
-import pickle
 import numpy as np
+from torch.utils import data
 from utils.CUDAinit import CUDA_Init
 from utils.ModelUtils import count_parameters
 from model.ATFN import ATFN
+from trains.ATFN import ATFN_Trainer
 from Data.Dataloader.AudioDataloader import AudioDataLoader
 
 def start():
@@ -25,6 +26,9 @@ def start():
     model = ATFN().to(device)
     
     print("This Model has {} trainable parameters".format(count_parameters(model)))
+    
+    trainer = ATFN_Trainer(model,dataloader)
+    trainer.do_train(device)
 
 if __name__ == '__main__':
     start()

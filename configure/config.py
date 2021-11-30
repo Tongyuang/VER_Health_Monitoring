@@ -107,10 +107,8 @@ class Model_ATFN_Config():
             'activation':'leaky_relu',# must in ['relu','leaky_relu','tanh']
         }
         self.commonParas = {
-            'need_data_aligned': False,
-            'need_model_aligned': False,
-            'need_normalized': True,
-            'early_stop': 8
+            'early_stop': 8,
+            'gen_lite_model_for_mobile':True,
         }
         
         self.ModelParas = {

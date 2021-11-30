@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+'''
+@File    :   ATFN.py
+@Last Modified    :   2021/11/29 16:04:51
+@Author  :   Yuang Tong 
+@Contact :   yuangtong1999@gmail.com
+'''
+
+# here put the import lib
+
 import os
 import time
 import logging
@@ -15,6 +26,7 @@ from utils.metrics import Metrics
 import torch
 import torch.nn as nn
 from torch import optim
+from torch.utils.mobile_optimizer import optimize_for_mobile
 
 
 class ATFN_Trainer():
@@ -24,23 +36,32 @@ class ATFN_Trainer():
         self.model = model
         self.model_config = Model_ATFN_Config()
         self.mode = self.model_config.mode
-
+        
         self.datapre_config = DataPreConfig()
         self.workdir = self.datapre_config.WORK_dir
 
         self.criterion = nn.L1Loss() if self.mode=='reg' else nn.CrossEntropyLoss()
-
-        self.optimizer = optim.Adam(
-            lr=self.model_config.ModelParas['learning_rate'])
+        self.optimizer = optim.Adam(params=self.model.parameters(),lr=self.model_config.ModelParas['learning_rate'])
 
         self.logger_config = Logger_Config()
         assert os.path.exists(self.logger_config.dir)
-        self.logger_file_name = os.path.join(self.logger_config.dir,'{}.log'.format(
-            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ATFN'
+        self.logger_file_name = os.path.join(self.logger_config.dir,'{}.log'.format( \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ATFN' \
         ))
+        
+        model_save_dir = os.path.join(self.workdir,'results','best_models')
+        if not os.path.exists(model_save_dir):
+            os.mkdir(model_save_dir)
 
-        self.model_save_path = os.path.join(self.workdir,'results','best_models','{}.pt'.format(
-            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ATFN-best'
+        self.model_save_path = os.path.join(model_save_dir,'{}.pt'.format( \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ATFN-best' \
+        ))
+        
+        if self.model_config.commonParas['gen_lite_model_for_mobile']:
+            # save lite model
+            lite_model_save_dir = os.path.join(self.workdir,'results','pub_models')
+            self.lite_model_save_path = os.path.join(lite_model_save_dir,'{}.ptl'.format( \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ATFN-best' \
         ))
 
         self.logger = logging
@@ -93,11 +114,10 @@ class ATFN_Trainer():
             # evaluate
             pred, true = torch.cat(y_pred), torch.cat(y_true)
 
-            train_results = self.Metrics.metrics(pred,true)
+            train_results = self.metrics.metrics(pred,true)
             output_str = ""
             for key in train_results.keys():
-                output_str += key+":"+train_results[key]+" | "
-            
+                output_str += ("{key}:{val:4f} |".format(key=key,val=train_results[key]))
             self.logger.info(output_str)
 
             eval_loss = self.do_valid(device)
@@ -107,9 +127,23 @@ class ATFN_Trainer():
                 self.logger.info("Best epoch:%d, min val loss: %.4f",best_epoch,min_eval_loss)
                 # save
                 torch.save(self.model.cpu().state_dict(),self.model_save_path)
+                self.logger.info("Best Model are saved at %s",self.model_save_path)
                 self.model.to(device)
             
             if epochs - best_epoch >= self.early_stop:
+                
+                print("early stop triggered!")
+                self.logger.info("early stop triggered!")
+                self.logger.info("Best Model are saved at %s",self.model_save_path)
+                # generate lite model for mobile
+                if self.model_config.commonParas['gen_lite_model_for_mobile']:
+                    quantized_model = torch.quantization.quantize_dynamic( \
+                        self.model.to('cpu'), qconfig_spec={torch.nn.Linear}, dtype=torch.qint8)
+                    scripted_model = torch.jit.script(quantized_model)
+                    optimized_model = optimize_for_mobile(scripted_model)
+                    optimized_model._save_for_lite_interpreter(self.lite_model_save_path)
+
+                print("finished.")
                 return
 
 
@@ -144,11 +178,11 @@ class ATFN_Trainer():
             # evaluate
             pred, true = torch.cat(y_pred), torch.cat(y_true)
 
-            valid_results = self.Metrics.metrics(pred,true)
+            valid_results = self.metrics.metrics(pred,true)
             output_str = ""
             for key in valid_results.keys():
-                output_str += key+":"+valid_results[key]+" | "
-            
+                output_str += ("{key}:{val:4f} |".format(key=key,val=valid_results[key]))
+           
             self.logger.info(output_str)
             return eval_loss
 

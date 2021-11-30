@@ -134,7 +134,7 @@ class ATFN(nn.Module):
         x_a = self.post_dropout(x_h)
         x_a = self.activation(self.post_linear1(x_a),inplace=True)
         x_a = self.activation(self.post_linear2(x_a),inplace=True)
-        x_o = self.output_activation(self.output_layer(x_a),inplace=True)
+        x_o = self.output_activation(self.output_layer(x_a))
         
         return x_o
         
