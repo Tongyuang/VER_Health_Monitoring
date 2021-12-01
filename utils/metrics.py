@@ -42,6 +42,8 @@ class Metrics():
         truth = y_true.view(-1).cpu().detach().numpy()
         preds = np.clip(preds, a_min=-1., a_max=1.)
         
+        num_samples = (len(preds))
+        
         mae = np.mean(np.absolute(preds - truth))
         corr = np.corrcoef(preds, truth)[0][1]
 
@@ -71,7 +73,7 @@ class Metrics():
         
         output_metrics['mae'] = mae
         output_metrics['corr'] = corr
-
+        output_metrics['num_samples'] = num_samples
         return output_metrics
 
     def eval_classification(self,y_pred,y_true):

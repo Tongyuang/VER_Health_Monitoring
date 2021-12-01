@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-@File    :   ATFN.py
-@Last Modified    :   2021/11/29 16:04:51
+@File    :   ACN.py
+@Last Modified    :   2021/12/01 12:57:10
 @Author  :   Yuang Tong 
 @Contact :   yuangtong1999@gmail.com
 '''
 
 # here put the import lib
-
 import os
 import time
 import numpy as np
@@ -17,7 +16,7 @@ from tqdm import tqdm
 import logging
 import sys
 sys.path.append('../')
-from configure.config import Model_ATFN_Config,Logger_Config,DataPreConfig
+from configure.config import Model_ACN_Config,Logger_Config,DataPreConfig
 from utils.metrics import Metrics
 
 import torch
@@ -26,12 +25,12 @@ from torch import optim
 from torch.utils.mobile_optimizer import optimize_for_mobile
 
 
-class ATFN_Trainer():
+class ACN_Trainer():
     def __init__(self,model,dataloader):
 
         self.dataloader = dataloader
         self.model = model
-        self.model_config = Model_ATFN_Config()
+        self.model_config = Model_ACN_Config()
         self.mode = self.model_config.mode
         
         self.datapre_config = DataPreConfig()
@@ -43,7 +42,7 @@ class ATFN_Trainer():
         self.logger_config = Logger_Config()
         assert os.path.exists(self.logger_config.dir)
         self.logger_file_name = os.path.join(self.logger_config.dir,'{}.log'.format( \
-            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ATFN' \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ACN' \
         ))
         
         model_save_dir = os.path.join(self.workdir,'results','best_models')
@@ -51,14 +50,14 @@ class ATFN_Trainer():
             os.mkdir(model_save_dir)
 
         self.model_save_path = os.path.join(model_save_dir,'{}.pt'.format( \
-            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ATFN-best' \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ACN-best' \
         ))
         
         if self.model_config.commonParas['gen_lite_model_for_mobile']:
             # save lite model
             lite_model_save_dir = os.path.join(self.workdir,'results','pub_models')
             self.lite_model_save_path = os.path.join(lite_model_save_dir,'{}.ptl'.format( \
-            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ATFN-best' \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-ACN-best' \
         ))
 
         self.logger = logging
@@ -72,14 +71,14 @@ class ATFN_Trainer():
         self.metrics = Metrics(self.mode)
 
         self.early_stop = self.model_config.commonParas['early_stop']
-        
+    
     def log_config(self):
         '''
         display config 
         '''
         for key in self.model_config.ModelParas.keys():
-            self.logger.info("{}:{}".format(key,self.model_config.ModelParas[key]))   
-                   
+            self.logger.info("{}:{}".format(key,self.model_config.ModelParas[key]))  
+    
     def do_train(self,device):
         epochs, best_epoch = 0, 0
         min_eval_loss = 1e6
@@ -93,7 +92,9 @@ class ATFN_Trainer():
             train_loss = 0.0
             with tqdm(self.dataloader['train']) as td:
                 for batch_data in td:
-                    input = batch_data['feature']
+                    input = batch_data['feature'] # (batch_size,feature_dim)
+                    # reshape
+                    input = input.view((input.shape[0],1,input.shape[-1]))
                     lbl = batch_data['reg_lbl'] if self.mode=='reg' else batch_data['cls_lbl']
                     # to device
                     input = input.to(device)
@@ -104,7 +105,6 @@ class ATFN_Trainer():
                     outputs = self.model(input)
                     # loss
                     loss = self.criterion(outputs,lbl)
-
                     # update
                     loss.backward()
                     self.optimizer.step()
@@ -134,6 +134,7 @@ class ATFN_Trainer():
                 # save
                 torch.save(self.model.cpu().state_dict(),self.model_save_path)
                 self.logger.info("Best Model are saved at %s",self.model_save_path)
+                
                 # generate lite model for mobile
                 if self.model_config.commonParas['gen_lite_model_for_mobile']:
                     quantized_model = torch.quantization.quantize_dynamic( \
@@ -141,7 +142,7 @@ class ATFN_Trainer():
                     scripted_model = torch.jit.script(quantized_model)
                     optimized_model = optimize_for_mobile(scripted_model)
                     optimized_model._save_for_lite_interpreter(self.lite_model_save_path)
-
+                
                 self.model.to(device)
             
             if epochs - best_epoch >= self.early_stop:
@@ -161,6 +162,9 @@ class ATFN_Trainer():
 
                 for batch_data in td:
                     input = batch_data['feature']
+                    # reshape
+                    input = input.view((input.shape[0],1,input.shape[-1]))
+
                     lbl = batch_data['reg_lbl'] if self.mode=='reg' else batch_data['cls_lbl']
                     # to device
                     input = input.to(device)
@@ -184,13 +188,8 @@ class ATFN_Trainer():
             valid_results = self.metrics.metrics(pred,true)
             output_str = ""
             for key in valid_results.keys():
-                output_str += ("{key}:{val:4f} |".format(key=key,val=valid_results[key]))
+                output_str += ("{key}:{val:.4f} |".format(key=key,val=valid_results[key]))
            
             self.logger.info(output_str)
             return eval_loss
-
-
-
-
-
 

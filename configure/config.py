@@ -128,6 +128,38 @@ class Model_ATFN_Config():
             'weight_decay': 1e-4,
         }
 
+class Model_ACN_Config():
+    def __init__(self):
+        self.mode = 'reg'
+        
+        self.commonParas = {
+            'early_stop': 8,
+            'gen_lite_model_for_mobile':True,
+        }
+        
+        self.ModelParas = {
+            'feature_dim':33,
+            
+            'channels' :[16,32,64],
+
+            'kernel_size': 3,
+            'pooling_kernel_size':2,
+            
+            'output_hidden_dim':64*4,
+            
+            'dropout': 0.2,
+            
+            'num_classes' :3,
+            
+            'activation':'leaky_relu',# must in ['relu','leaky_relu','tanh']
+            'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
+            
+            'learning_rate': 5e-4,
+            'weight_decay': 1e-4,
+            
+        }
+        
+
 class Logger_Config():
     def __init__(self):
         self.DataPreConfig = DataPreConfig()
