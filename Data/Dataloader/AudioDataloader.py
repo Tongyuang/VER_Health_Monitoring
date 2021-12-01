@@ -46,17 +46,45 @@ class AudioDataset(Dataset):
     
     def Normalize(self):
         # (num_samples,length,feature_dim) -> ( num_samples, feature_dim)
+        feature_length = -1
         for dsname in self.DatasetMap.keys():
             feature = self.DatasetMap[dsname]['feature']
+            # raw feature
+            self.DatasetMap[dsname]['raw_feature'] = feature.copy() # (num_samples,length,feature_dim)
+            length = self.DatasetMap[dsname]['raw_feature'].shape[1]
+            if length>feature_length:
+                feature_length = length
+                
             feature = np.transpose(feature,(1,0,2))
             feature = np.mean(feature,axis=0,keepdims=False)
             self.DatasetMap[dsname]['feature'] = feature
+
+        self.feature_length = feature_length
+        
+    def Padding(self):
+        # keep the raw feature (dim 2: length) the same
+        
+        for dsname in self.DatasetMap.keys():
+            raw_feature = self.DatasetMap[dsname]['raw_feature']
+            feature_length = raw_feature.shape[1]
+            if feature_length==self.feature_length:
+                continue
+            # transpose
+            raw_feature = np.transpose(raw_feature,(1,0,2))
+            pad = np.zeros((self.feature_length-feature_length,raw_feature.shape[1],raw_feature.shape[2]))
+            
+            raw_feature = np.concatenate((raw_feature,pad),axis=0)
+            raw_feature = np.transpose(raw_feature,(1,0,2))
+            self.DatasetMap[dsname]['raw_feature'] = raw_feature
     
     def Concatenate(self):
-        # Concatenate
+        # Concatenate different datasets
         self.FullDataset = {}
+        
         self.Normalize()
-        for dsname in self.DatasetMap.keys():
+        self.Padding()
+        
+        for dsname in self.DatasetMap.keys(): # dataset name
             keys = self.DatasetMap[dsname].keys()
             for key in keys:
                 if not key in self.FullDataset:
@@ -78,9 +106,11 @@ class AudioDataset(Dataset):
     def __getitem__(self, index):
         
         feature = self.FullDataset['feature'][index]
+        raw_feature = self.FullDataset['raw_feature'][index]
         reg_lbl = self.FullDataset['reg_lbls'][index]
         cls_lbl = self.FullDataset['cls_lbls'][index]
         sample = {
+            'raw_feature':torch.tensor(raw_feature),
             'feature': torch.Tensor(feature),
             'reg_lbl': torch.Tensor(reg_lbl),
             'cls_lbl':torch.Tensor(cls_lbl)
@@ -109,7 +139,6 @@ def AudioDataLoader():
     return FullDataLoader
      
 if __name__ == '__main__':
-    
     pass
       
     
