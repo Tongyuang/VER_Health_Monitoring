@@ -151,7 +151,7 @@ class Model_ACN_Config():
             
             'num_classes' :3,
             
-            'activation':'leaky_relu',# must in ['relu','leaky_relu','tanh']
+            'activation':'relu',# must in ['relu','leaky_relu','tanh']
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
             
             'learning_rate': 5e-4,
