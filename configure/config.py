@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 '''
 @File    :   config.py
-@Last Modified    :   2021/11/26 14:58:49
+@Last Modified    :   2021/12/03 17:13:41
 @Author  :   Yuang Tong 
 @Contact :   yuangtong1999@gmail.com
 '''
@@ -159,7 +161,28 @@ class Model_ACN_Config():
             
         }
         
-
+class Model_ALSTM_Config():
+    def __init__(self):
+        self.mode = 'reg'
+        
+        self.commonParas = {
+            'early_stop': 8,
+            'gen_lite_model_for_mobile':True,
+        }
+        self.ModelParas = {
+            'feature_dim':33,
+            'sequence_length': 588, # remember to check the './Data/Scripts/Statistics.txt'
+            
+            'dropout':0.2,
+            'hidden_size':32,
+            'num_layers':64,
+            
+            'norm_mode':'last', # how to normalize the result, must in ['last','mean','linear']
+            
+            'linear_layer':''
+        }
+        
+        
 class Logger_Config():
     def __init__(self):
         self.DataPreConfig = DataPreConfig()
