@@ -55,7 +55,7 @@ class SubNet(nn.Module):
         elif self.activation_mode == 'leaky_relu':
             self.activation = F.leaky_relu
         elif self.activation_mode == 'tanh':
-            self.activation = F.tanh
+            self.activation = torch.tanh
             
         self.linear_1 = nn.Linear(in_size, hidden_size)
         self.linear_2 = nn.Linear(hidden_size, hidden_size)
@@ -111,7 +111,7 @@ class ATFN(nn.Module):
         elif self.output_activation_mode == 'leaky_relu':
             self.output_activation = F.leaky_relu
         elif self.output_activation_mode == 'tanh':
-            self.output_activation = F.tanh
+            self.output_activation = torch.tanh
             
         
         self.subnet = SubNet(self.feature_dim,self.hidden_dim, self.dropout)

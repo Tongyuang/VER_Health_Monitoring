@@ -170,6 +170,7 @@ class Model_ALSTM_Config():
             'gen_lite_model_for_mobile':True,
         }
         self.ModelParas = {
+            'num_classes':3,
             'feature_dim':33,
             'sequence_length': 588, # remember to check the './Data/Scripts/Statistics.txt'
             
@@ -177,9 +178,13 @@ class Model_ALSTM_Config():
             'hidden_size':32,
             'num_layers':64,
             
-            'norm_mode':'last', # how to normalize the result, must in ['last','mean','linear']
+            'norm_mode':'last', # how to normalize the result, must in ['last','mean']
             
-            'linear_layer':''
+            'linear_hidden_dim':16, # the hidden dim of linear output layer
+            'output_activation':'tanh',# must in ['relu','leaky_relu','tanh']
+            
+            'learning_rate': 5e-4,
+            'weight_decay': 1e-4,
         }
         
         

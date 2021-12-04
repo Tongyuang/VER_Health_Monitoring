@@ -13,27 +13,26 @@ import numpy as np
 from torch.utils import data
 from utils.CUDAinit import CUDA_Init
 from utils.ModelUtils import count_parameters
-from model.ATFN import ATFN
-from model.ACN import ACN
-from trains.ATFN import ATFN_Trainer
-from trains.ACN import ACN_Trainer
+from model.ModelSelector import ModelSelector
+from trains.trainer import Trainer
 from Data.Dataloader.AudioDataloader import AudioDataLoader
 
-def start():
+def start(model_name):
     # load device
     device_name,device = CUDA_Init()
     print("using device:{}".format(device_name))
     
     dataloader = AudioDataLoader()
-    #model = ATFN().to(device)
-    model = ACN().to(device)
+
+    model = ModelSelector(model_name)
+    model = model.to(device)
     print("This Model has {} trainable parameters".format(count_parameters(model)))
     
-    trainer = ACN_Trainer(model,dataloader)
+    trainer = Trainer(model,model_name,dataloader)
     trainer.do_train(device)
 
 if __name__ == '__main__':
-    start()
+    start('ALSTM')
     
 
     
