@@ -43,7 +43,7 @@ class SubNet(nn.Module):
         
         self.ModelConfig = Model_ATFN_Config()
         
-        self.norm = nn.BatchNorm1d(in_size)
+        self.norm = nn.BatchNorm1d(hidden_size)
         self.drop = nn.Dropout(p=dropout)
     
         self.activation_mode = self.ModelConfig.SubnetParas['activation']
@@ -66,12 +66,12 @@ class SubNet(nn.Module):
         Args:
             x: tensor of shape (batch_size, in_size) # in_size=feature_dim
         '''
-        normed = self.norm(x)
-        dropped = self.drop(normed)
-        y_1 = self.activation(self.linear_1(dropped))
-        y_2 = self.activation(self.linear_2(y_1))
-        y_3 = self.activation(self.linear_3(y_2))
+        
 
+        y_1 = self.activation(self.norm(self.linear_1(dropped)))
+        y_2 = self.activation(self.norm(self.linear_2(y_1)))
+        y_3 = self.activation(self.norm(self.linear_3(y_2)))
+        y_3 = self.drop(y_3)
         return y_3
 
 class ATFN(nn.Module):
@@ -118,7 +118,9 @@ class ATFN(nn.Module):
         
         self.post_dropout = nn.Dropout(self.post_dropout)
         self.post_linear1 = nn.Linear(self.hidden_dim,self.post_hidden_dim)
+        self.post_norm1 = nn.BatchNorm1d(self.post_hidden_dim)
         self.post_linear2 = nn.Linear(self.post_hidden_dim,self.post_hidden_dim)
+        self.post_norm2 = nn.BatchNorm1d(self.post_hidden_dim)
         self.output_layer = nn.Linear(self.post_hidden_dim,self.output_dim)
     
     def forward(self,x):
@@ -130,11 +132,10 @@ class ATFN(nn.Module):
             x = x.squeeze(1)
         
         x_h = self.subnet(x)
+        y = self.activation(self.norm1(self.post_linear1(x_h)),inplace=True)
+        y = self.activation(self.norm2(self.post_linear2(y)),inplace=True)
+        y = self.post_dropout(y)
+        y = self.output_activation(self.output_layer(y))
         
-        x_a = self.post_dropout(x_h)
-        x_a = self.activation(self.post_linear1(x_a),inplace=True)
-        x_a = self.activation(self.post_linear2(x_a),inplace=True)
-        x_o = self.output_activation(self.output_layer(x_a))
-        
-        return x_o
+        return y
         

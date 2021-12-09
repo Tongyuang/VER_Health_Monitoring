@@ -41,6 +41,7 @@ class Trainer():
                
         self.mode = self.model_config.mode
         
+
         self.datapre_config = DataPreConfig()
         self.workdir = self.datapre_config.WORK_dir
 
@@ -77,7 +78,7 @@ class Trainer():
                     )
         
         self.metrics = Metrics(self.mode)
-
+        
         self.early_stop = self.model_config.commonParas['early_stop']
     
     def log_config(self):
@@ -110,7 +111,12 @@ class Trainer():
                         # reshape
                         input = input.view((input.shape[0],1,input.shape[-1]))
                     
-                    lbl = batch_data['reg_lbl'] if self.mode=='reg' else batch_data['cls_lbl']
+                    if self.mode=='reg':
+                        lbl = batch_data['reg_lbl'].to('cpu')  
+                        lbl = self.metrics.three_classifier(lbl,self.model_config.LabelParas['low_thres'],self.model_config.LabelParas['high_thres'])
+                    else:
+                        lbl = batch_data['cls_lbl']
+                    
                     # to device
                     input = input.to(device)
                     lbl = lbl.to(device)
@@ -186,8 +192,12 @@ class Trainer():
                         input = batch_data['feature'] # (batch_size,feature_dim)
                         # reshape
                         input = input.view((input.shape[0],1,input.shape[-1]))
-                        
-                    lbl = batch_data['reg_lbl'] if self.mode=='reg' else batch_data['cls_lbl']
+                    
+                    if self.mode=='reg':
+                        lbl = batch_data['reg_lbl'].to('cpu')  
+                        lbl = self.metrics.three_classifier(lbl,self.model_config.LabelParas['low_thres'],self.model_config.LabelParas['high_thres'])
+                    else:
+                        lbl = batch_data['cls_lbl']
                     # to device
                     input = input.to(device)
                     lbl = lbl.to(device)

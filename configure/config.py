@@ -129,6 +129,11 @@ class Model_ATFN_Config():
             'learning_rate': 5e-3,
             'weight_decay': 1e-4,
         }
+        
+        self.LabelParas = {
+            'low_thres':-0.1,
+            'high_thres':0.1
+        }
 
 class Model_ACN_Config():
     def __init__(self):
@@ -161,6 +166,11 @@ class Model_ACN_Config():
             
         }
         
+        self.LabelParas = {
+            'low_thres':-0.1,
+            'high_thres':0.1
+        }
+        
 class Model_ALSTM_Config():
     def __init__(self):
         self.mode = 'reg'
@@ -185,6 +195,11 @@ class Model_ALSTM_Config():
             
             'learning_rate': 5e-4,
             'weight_decay': 1e-4,
+        }
+        
+        self.LabelParas = {
+            'low_thres':-0.1,
+            'high_thres':0.1
         }
         
         

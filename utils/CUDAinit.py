@@ -13,6 +13,8 @@ import pynvml
 import torch
 
 def CUDA_Init():
+    if not torch.cuda.is_available():
+        return 'cpu',torch.device('cpu')
     # CUDA Info obtained by pynvml
     available_gpus = list()
     pynvml.nvmlInit()
@@ -32,7 +34,7 @@ def CUDA_Init():
     print("Using gpu {}, used memory:{},cur temperature:{} C".format(target_gid,min_mem,temp))
     available_gpus.append(target_gid)
     
-    using_cuda = len(available_gpus)>0 and torch.cuda.is_available()
+    using_cuda = len(available_gpus)>0
     
     device_name = 'cuda:%d'% int(available_gpus[0]) if using_cuda else 'cpu'
     device = torch.device(device_name)
