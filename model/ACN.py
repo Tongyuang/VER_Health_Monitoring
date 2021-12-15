@@ -64,7 +64,7 @@ class SubConvNet(nn.Module):
             stride = self.pooling_kernel_size
         )
         
-        self.norm = nn.BatchNorm1d(self.in_channels)
+        self.norm = nn.BatchNorm1d(self.out_channels)
         self.drop = nn.Dropout(p=dropout)
         
         self.activation_mode = activation
@@ -83,13 +83,12 @@ class SubConvNet(nn.Module):
             x: tensor of shape (batch_size,in_channels,in_size) # in_size=feature_dim
         '''
         
-        normed = self.norm(x)
-        dropped = self.drop(normed)
         
-        y = self.conv1(dropped)
+        y = self.conv1(x)
         y = self.conv2(y)
+        y = self.norm(y)
         y = self.activation(self.pooling(y))
-        
+        y = self.drop(y)
         return y
 
 class ACN(nn.Module):

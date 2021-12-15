@@ -68,7 +68,7 @@ class SubNet(nn.Module):
         '''
         
 
-        y_1 = self.activation(self.norm(self.linear_1(dropped)))
+        y_1 = self.activation(self.norm(self.linear_1(x)))
         y_2 = self.activation(self.norm(self.linear_2(y_1)))
         y_3 = self.activation(self.norm(self.linear_3(y_2)))
         y_3 = self.drop(y_3)
@@ -132,8 +132,8 @@ class ATFN(nn.Module):
             x = x.squeeze(1)
         
         x_h = self.subnet(x)
-        y = self.activation(self.norm1(self.post_linear1(x_h)),inplace=True)
-        y = self.activation(self.norm2(self.post_linear2(y)),inplace=True)
+        y = self.activation(self.post_norm1(self.post_linear1(x_h)),inplace=True)
+        y = self.activation(self.post_norm2(self.post_linear2(y)),inplace=True)
         y = self.post_dropout(y)
         y = self.output_activation(self.output_layer(y))
         

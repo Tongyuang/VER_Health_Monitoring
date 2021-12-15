@@ -42,10 +42,28 @@ class DataPreProcessor():
         assert os.path.exists(wav_dir)
         y,sr = librosa.load(wav_dir)
         hop_length = self._DataPreConfig.hop_length
-        f0 = librosa.feature.zero_crossing_rate(y, hop_length=hop_length).T # (seq_len, 1)
-        mfcc = librosa.feature.mfcc(y=y, sr=sr, hop_length=hop_length, htk=True).T # (seq_len, 20)
+        n_fft = 2048
+        f0 = librosa.feature.zero_crossing_rate(y,hop_length=hop_length).T # (seq_len, 1)
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, hop_length=hop_length, htk=True,n_fft=n_fft).T # (seq_len, 20)
+        mfcc_delta = librosa.feature.delta(mfcc) # (seq_len,20)
         cqt = librosa.feature.chroma_cqt(y=y, sr=sr, hop_length=hop_length).T # (seq_len, 12)
-        return np.concatenate([f0,mfcc,cqt],axis=-1) #(seqlen,33)
+        tonnetz = librosa.feature.tonnetz(y=y,sr=sr).T # (seq_len,6)
+
+        # spectral features
+        centroid = librosa.feature.spectral_centroid(y=y,sr=sr,n_fft=n_fft,hop_length=hop_length).T # (seq_len, 1)
+        bandwidth = librosa.feature.spectral_bandwidth(y=y,sr=sr,n_fft=n_fft,hop_length=hop_length).T # (seq_len, 1)
+        contrast = librosa.feature.spectral_contrast(y=y,sr=sr,n_fft=n_fft,hop_length=hop_length).T # (seq_len, 7)
+        flatness = librosa.feature.spectral_flatness(y=y,n_fft=n_fft,hop_length=hop_length).T  # (seq_len, 1)
+        rolloff = librosa.feature.spectral.spectral_rolloff(y=y,sr=sr,n_fft=n_fft,hop_length=hop_length).T # (seq_len, 1)       
+        spectral_features = np.concatenate([centroid,bandwidth,contrast,flatness,rolloff],axis=-1) # (seq_len, 11)
+        
+        # rhythm features
+        tpg = librosa.feature.tempogram(y=y,sr=sr,hop_length=hop_length).T # (seq_len,384)
+        
+        # melspectrogram
+        mels = librosa.feature.melspectrogram(y=y,sr=sr,n_fft=n_fft,hop_length=hop_length).T # (seq_len,128)
+        
+        return np.concatenate([f0,mfcc,cqt,tonnetz,spectral_features,tpg,mels],axis=-1) # (seq_len,562)
 
     def padding(self,feature,MAX_LEN):
         # input: (seqlen,feature_dim)

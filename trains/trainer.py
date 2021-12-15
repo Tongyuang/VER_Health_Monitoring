@@ -141,7 +141,7 @@ class Trainer():
             # evaluate
             pred, true = torch.cat(y_pred), torch.cat(y_true)
 
-            train_results = self.metrics.metrics(pred,true)
+            train_results = self.metrics.metrics(pred,true,self.model_config.LabelParas['low_thres'],self.model_config.LabelParas['high_thres'])
             output_str = ""
             for key in train_results.keys():
                 output_str += ("{key}:{val:4f} |".format(key=key,val=train_results[key]))
@@ -217,7 +217,7 @@ class Trainer():
             # evaluate
             pred, true = torch.cat(y_pred), torch.cat(y_true)
 
-            valid_results = self.metrics.metrics(pred,true)
+            valid_results = self.metrics.metrics(pred,true,self.model_config.LabelParas['low_thres'],self.model_config.LabelParas['high_thres'])
             output_str = ""
             for key in valid_results.keys():
                 output_str += ("{key}:{val:.4f} |".format(key=key,val=valid_results[key]))

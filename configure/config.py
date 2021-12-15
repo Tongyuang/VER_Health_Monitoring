@@ -52,7 +52,7 @@ class DataPreConfig():
         # output feature
         self.suffix = '.pkl'       
         self.feature_store_dir = {
-            name:os.path.join(self.DATA_dir,name,'feature'+self.suffix) for name in self.dataset_names
+            name:os.path.join(self.DATA_dir,name,'feature_all'+self.suffix) for name in self.dataset_names
         }      
         # feature_statistics
         self.feature_statistics_dir = os.path.join(self.WORK_dir,'Data','Scripts','Statistics.txt')
@@ -140,7 +140,7 @@ class Model_ACN_Config():
         self.mode = 'reg'
         
         self.commonParas = {
-            'early_stop': 8,
+            'early_stop': 16,
             'gen_lite_model_for_mobile':True,
         }
         
@@ -158,10 +158,10 @@ class Model_ACN_Config():
             
             'num_classes' :3,
             
-            'activation':'relu',# must in ['relu','leaky_relu','tanh']
+            'activation':'tanh',# must in ['relu','leaky_relu','tanh']
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
             
-            'learning_rate': 5e-4,
+            'learning_rate': 1e-4,
             'weight_decay': 1e-4,
             
         }

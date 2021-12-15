@@ -1,0 +1,10 @@
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: feature_dim:33
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: hidden_dim:32
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: dropout:0.2
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: post_hidden_dim:4
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: post_drouput:0.2
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: num_classes:3
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: activation:leaky_relu
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_activation:tanh
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: learning_rate:0.005
+2021-12-09 16:30:04,330 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: weight_decay:0.0001

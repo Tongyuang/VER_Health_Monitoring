@@ -74,11 +74,10 @@ class ALSTM(nn.Module):
         
         
         self.output_Layer = nn.Sequential(
-            nn.BatchNorm1d(self.hidden_size),
-            nn.Dropout(self.drouput),
             nn.Linear(self.hidden_size,self.linear_hidden_dim),
             nn.ReLU(),
             nn.Linear(self.linear_hidden_dim,self.output_dim),
+            nn.BatchNorm1d(self.output_dim),
         )
     
     def forward(self,x):
