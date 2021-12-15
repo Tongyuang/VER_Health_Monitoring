@@ -63,7 +63,10 @@ class ALSTM(nn.Module):
         self.linear_hidden_dim = self.ModelConfig.ModelParas['linear_hidden_dim']
         
         self.output_dim = self.ModelConfig.ModelParas['num_classes'] if self.mode=='cls' else 1
-        self.activation_mode = self.ModelConfig.ModelParas['output_activation']
+        if self.mode=='reg':
+            self.output_activation_mode = self.ModelConfig.ModelParas['output_activation']
+        else:#classification
+            self.output_activation_mode = self.ModelConfig.ModelParas['output_activation_for_classification']
         assert self.activation_mode in ['relu','leaky_relu','tanh']
         if self.activation_mode == 'relu':
             self.activation = F.relu

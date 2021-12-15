@@ -14,6 +14,7 @@ sys.path.append("../")
 
 from numpy.typing import _256Bit
 from configure.config import DataPreConfig,Emoconfig
+import configure.config as cfg
 import os
 import pickle
 import librosa
@@ -185,7 +186,9 @@ class DataPreProcessor():
         assert reg_lbls_in.shape[-1]==1
         cls_lbls = np.zeros((reg_lbls_in.shape[0],1))
         for idx in range(len(reg_lbls_in)):
-            cls_lbls[idx] = self._Emoconfig.Reg2ClsLblCvtr(reg_lbls_in[idx][0])
+            cls_lbls[idx] = self._Emoconfig.Reg2ClsLblCvtr(low_thres = cfg.LabelParas['low_thres'],
+                                                           high_thres = cfg.LabelParas['high_thres'],
+                                                           reg_lbl_in=reg_lbls_in[idx][0])
         return cls_lbls
 
     def SaveFeature(self):

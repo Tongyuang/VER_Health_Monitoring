@@ -1,0 +1,14 @@
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: feature_dim:33
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: channels:[16, 32, 64]
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: kernel_size:3
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: pooling_kernel_size:2
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_hidden_dim:256
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: dropout:0.2
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: num_classes:3
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: activation:tanh
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_activation:tanh
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_activation_for_classification:relu
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: learning_rate:0.0001
+2021-12-15 11:55:20,025 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: weight_decay:0.0001
+2021-12-15 11:55:21,066 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:141] - INFO: TRAINING: epoch:1, best epoch:0,loss: 1.0190
+2021-12-15 11:55:21,070 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:150] - INFO: mae:0.7847 |corr:0.0016 |f1score:0.6178 |acc:0.5173 |

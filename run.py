@@ -32,7 +32,7 @@ def start(model_name):
     trainer.do_train(device)
 
 if __name__ == '__main__':
-    start('ALSTM')
+    start('ACN')
     
 
     

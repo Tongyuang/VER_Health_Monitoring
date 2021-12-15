@@ -51,7 +51,7 @@ class Trainer():
         self.logger_config = Logger_Config()
         assert os.path.exists(self.logger_config.dir)
         self.logger_file_name = os.path.join(self.logger_config.dir,'{}.log'.format( \
-            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-{}'.format(self.model_name) \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-{}-{}'.format(self.model_name,self.mode) \
         ))
         
         model_save_dir = os.path.join(self.workdir,'results','best_models')
@@ -59,14 +59,14 @@ class Trainer():
             os.mkdir(model_save_dir)
 
         self.model_save_path = os.path.join(model_save_dir,'{}.pt'.format( \
-            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-{}-best'.format(self.model_name) \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-{}-{}-best'.format(self.model_name,self.mode) \
         ))
         
         if self.model_config.commonParas['gen_lite_model_for_mobile']:
             # save lite model
             lite_model_save_dir = os.path.join(self.workdir,'results','pub_models')
             self.lite_model_save_path = os.path.join(lite_model_save_dir,'{}.ptl'.format( \
-            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-{}-best'.format(self.model_name) \
+            time.strftime('%Y-%m-%d-%I-%M-%S', time.localtime())+'-{}-{}-best'.format(self.model_name,self.mode) \
         ))
 
         self.logger = logging
@@ -110,21 +110,20 @@ class Trainer():
                         input = batch_data['feature'] # (batch_size,feature_dim)
                         # reshape
                         input = input.view((input.shape[0],1,input.shape[-1]))
-                    
-                    if self.mode=='reg':
-                        lbl = batch_data['reg_lbl'].to('cpu')  
-                        lbl = self.metrics.three_classifier(lbl,self.model_config.LabelParas['low_thres'],self.model_config.LabelParas['high_thres'])
-                    else:
-                        lbl = batch_data['cls_lbl']
-                    
+                        
+                    lbl = batch_data['reg_lbl'].to('cpu')
+                    if self.mode=='cls':
+                        lbl = self.metrics.three_classifier(lbl) # [0,1,2]
+                    lbl = lbl.view(-1)
+                    lbl = lbl.to(device, dtype=torch.int64)                    
+                        
                     # to device
                     input = input.to(device)
-                    lbl = lbl.to(device)
+                    
                     # clear gradient
                     self.optimizer.zero_grad()
                     # forward
                     outputs = self.model(input)
-                    # loss
                     loss = self.criterion(outputs,lbl)
                     # update
                     loss.backward()
@@ -140,11 +139,9 @@ class Trainer():
 
             # evaluate
             pred, true = torch.cat(y_pred), torch.cat(y_true)
-
-            train_results = self.metrics.metrics(pred,true,self.model_config.LabelParas['low_thres'],self.model_config.LabelParas['high_thres'])
-            output_str = ""
-            for key in train_results.keys():
-                output_str += ("{key}:{val:4f} |".format(key=key,val=train_results[key]))
+            pred = self.metrics.onehot2cls(pred)
+            train_results = self.metrics.metrics(pred,true)
+            output_str = self.get_logger_str(train_results)
             self.logger.info(output_str)
 
             eval_loss = self.do_valid(device)
@@ -195,12 +192,15 @@ class Trainer():
                     
                     if self.mode=='reg':
                         lbl = batch_data['reg_lbl'].to('cpu')  
-                        lbl = self.metrics.three_classifier(lbl,self.model_config.LabelParas['low_thres'],self.model_config.LabelParas['high_thres'])
+                        lbl = self.metrics.three_classifier(lbl)
+                        lbl = lbl.to(device)
                     else:
-                        lbl = batch_data['cls_lbl']
+                        lbl = batch_data['cls_lbl'].to('cpu')
+                        lbl = lbl.view(-1)
+                        lbl = lbl.to(device, dtype=torch.int64)
+                        
                     # to device
                     input = input.to(device)
-                    lbl = lbl.to(device)
                     # forward
                     outputs = self.model(input)
                     # loss
@@ -216,12 +216,23 @@ class Trainer():
 
             # evaluate
             pred, true = torch.cat(y_pred), torch.cat(y_true)
+            pred = self.metrics.onehot2cls(pred)
 
-            valid_results = self.metrics.metrics(pred,true,self.model_config.LabelParas['low_thres'],self.model_config.LabelParas['high_thres'])
-            output_str = ""
-            for key in valid_results.keys():
-                output_str += ("{key}:{val:.4f} |".format(key=key,val=valid_results[key]))
+            valid_results = self.metrics.metrics(pred,true)
+            output_str = self.get_logger_str(valid_results)
            
             self.logger.info(output_str)
             return eval_loss
 
+    def get_logger_str(self,result):
+        '''
+        from result get logger string
+        '''
+        output_str = ""
+        for key in result.keys():
+            if key in ['acc','f1score','mae']:
+                output_str += ("{key}:{val:.4f} |".format(key=key,val=result[key]))
+            elif key == 'CM':
+                output_str += ("{key}:{val} |".format(key=key,val=result[key].flatten()))
+
+        return output_str

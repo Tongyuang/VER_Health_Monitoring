@@ -17,6 +17,11 @@ import os
 import logging
 
 
+LabelParas = {
+    'low_thres':0,
+    'high_thres':0.33
+}
+
 class DataPreConfig():
     def __init__(self):
         
@@ -39,7 +44,6 @@ class DataPreConfig():
         # parameters when padding:
         self.padding_mode = "zeros" #["zeros","normal"]
         self.padding_loc = "front" # ["front","back"]
-        
 
         # split paras
         self.split_ratio = {
@@ -52,7 +56,7 @@ class DataPreConfig():
         # output feature
         self.suffix = '.pkl'       
         self.feature_store_dir = {
-            name:os.path.join(self.DATA_dir,name,'feature_all'+self.suffix) for name in self.dataset_names
+            name:os.path.join(self.DATA_dir,name,'feature'+self.suffix) for name in self.dataset_names
         }      
         # feature_statistics
         self.feature_statistics_dir = os.path.join(self.WORK_dir,'Data','Scripts','Statistics.txt')
@@ -86,13 +90,13 @@ class Emoconfig():
         }
 
 
-    def Reg2ClsLblCvtr(self,reg_lbl_in): # regress label -> class label
-        if reg_lbl_in>0: # Positive
+    def Reg2ClsLblCvtr(self,low_thres,high_thres,reg_lbl_in): # regress label -> class label
+        if reg_lbl_in>high_thres: # Positive
             return 2
-        elif reg_lbl_in==0:  # Neutral
-            return 1
-        else:  # Negative
+        elif reg_lbl_in<=low_thres:  # Neutral
             return 0
+        else:  # Negative
+            return 1
 
 class DataLoaderConfig():
     def __init__(self):
@@ -114,7 +118,7 @@ class Model_ATFN_Config():
         }
         
         self.ModelParas = {
-            'feature_dim':33,
+            'feature_dim':562,
             'hidden_dim': 32,
             'dropout': 0.2,
             
@@ -125,19 +129,16 @@ class Model_ATFN_Config():
             
             'activation':'leaky_relu', # must in ['relu','leaky_relu','tanh']
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
+            'output_activation_for_classification':'relu',
             
             'learning_rate': 5e-3,
             'weight_decay': 1e-4,
         }
         
-        self.LabelParas = {
-            'low_thres':-0.1,
-            'high_thres':0.1
-        }
 
 class Model_ACN_Config():
     def __init__(self):
-        self.mode = 'reg'
+        self.mode = 'cls'
         
         self.commonParas = {
             'early_stop': 16,
@@ -158,17 +159,13 @@ class Model_ACN_Config():
             
             'num_classes' :3,
             
-            'activation':'tanh',# must in ['relu','leaky_relu','tanh']
+            'activation':'relu',# must in ['relu','leaky_relu','tanh']
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
+            'output_activation_for_classification':'relu',
             
             'learning_rate': 1e-4,
             'weight_decay': 1e-4,
             
-        }
-        
-        self.LabelParas = {
-            'low_thres':-0.1,
-            'high_thres':0.1
         }
         
 class Model_ALSTM_Config():
@@ -192,15 +189,12 @@ class Model_ALSTM_Config():
             
             'linear_hidden_dim':16, # the hidden dim of linear output layer
             'output_activation':'tanh',# must in ['relu','leaky_relu','tanh']
+            'output_activation_for_classification':'relu',
             
             'learning_rate': 5e-4,
             'weight_decay': 1e-4,
         }
         
-        self.LabelParas = {
-            'low_thres':-0.1,
-            'high_thres':0.1
-        }
         
         
 class Logger_Config():

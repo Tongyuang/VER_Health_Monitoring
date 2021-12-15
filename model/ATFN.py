@@ -102,7 +102,10 @@ class ATFN(nn.Module):
         elif self.activation_mode == 'tanh':
             self.activation = F.tanh
         
-        self.output_activation_mode = self.ModelConfig.ModelParas['output_activation']
+        if self.mode=='reg':
+            self.output_activation_mode = self.ModelConfig.ModelParas['output_activation']
+        else:#classification
+            self.output_activation_mode = self.ModelConfig.ModelParas['output_activation_for_classification']
         
         assert self.output_activation_mode in  ['relu','leaky_relu','tanh']
         

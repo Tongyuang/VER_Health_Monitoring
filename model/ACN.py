@@ -110,8 +110,12 @@ class ACN(nn.Module):
 
         self.output_hidden_dim = self.ModelConfig.ModelParas['output_hidden_dim']
         self.output_layer = nn.Linear(self.output_hidden_dim,self.output_dim)
+        
+        if self.mode=='reg':
+            self.output_activation_mode = self.ModelConfig.ModelParas['output_activation']
+        else:#classification
+            self.output_activation_mode = self.ModelConfig.ModelParas['output_activation_for_classification']
             
-        self.output_activation_mode = self.ModelConfig.ModelParas['output_activation']
         if self.output_activation_mode == 'relu':
             self.output_activation = F.relu
         elif self.output_activation_mode == 'leaky_relu':
