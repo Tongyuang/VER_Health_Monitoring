@@ -118,7 +118,9 @@ class Model_ATFN_Config():
         }
         
         self.ModelParas = {
-            'feature_dim':562,
+            'feature_dim':582,
+            
+            'hidden_dims' : [512,256,128,32,16],
             'hidden_dim': 32,
             'dropout': 0.2,
             
@@ -146,20 +148,17 @@ class Model_ACN_Config():
         }
         
         self.ModelParas = {
-            'feature_dim':33,
-            
-            'channels' :[16,32,64],
-
-            'kernel_size': 3,
-            'pooling_kernel_size':2,
-            
-            'output_hidden_dim':64*4,
-            
-            'dropout': 0.2,
-            
+            'feature_dim':582,
             'num_classes' :3,
-            
             'activation':'relu',# must in ['relu','leaky_relu','tanh']
+                        
+            'channels' :[16,32,32,64,64,128,128], # 
+            'kernels': [7,7,7,5,5,3,3],# must odd number
+            'pooling_kernels' :[0,0,4,0,4,0,4], # 0 means no pooling
+            'dropout': [0,0,0,0,0,0.2,0.2],
+            # output
+            'output_hidden_dim':9*128, # 
+            'output_dropout': 0.2,
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
             'output_activation_for_classification':'relu',
             

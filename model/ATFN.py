@@ -30,7 +30,7 @@ class SubNet(nn.Module):
     The subnetwork that is used in TFN for video and audio in the pre-fusion stage
     '''
 
-    def __init__(self, in_size, hidden_size, dropout):
+    def __init__(self, in_size, out_size, dropout,activation):
         '''
         Args:
             in_size: input dimension
@@ -41,12 +41,11 @@ class SubNet(nn.Module):
         '''
         super(SubNet, self).__init__()
         
-        self.ModelConfig = Model_ATFN_Config()
-        
-        self.norm = nn.BatchNorm1d(hidden_size)
+        self.norm = nn.BatchNorm1d(out_size)
         self.drop = nn.Dropout(p=dropout)
+        
     
-        self.activation_mode = self.ModelConfig.SubnetParas['activation']
+        self.activation_mode = activation
         
         assert self.activation_mode in  ['relu','leaky_relu','tanh']
         
@@ -57,22 +56,19 @@ class SubNet(nn.Module):
         elif self.activation_mode == 'tanh':
             self.activation = torch.tanh
             
-        self.linear_1 = nn.Linear(in_size, hidden_size)
-        self.linear_2 = nn.Linear(hidden_size, hidden_size)
-        self.linear_3 = nn.Linear(hidden_size, hidden_size)
-
+        self.linear = nn.Linear(in_size,out_size)
+        
     def forward(self, x):
         '''
         Args:
             x: tensor of shape (batch_size, in_size) # in_size=feature_dim
         '''
         
-
-        y_1 = self.activation(self.norm(self.linear_1(x)))
-        y_2 = self.activation(self.norm(self.linear_2(y_1)))
-        y_3 = self.activation(self.norm(self.linear_3(y_2)))
-        y_3 = self.drop(y_3)
-        return y_3
+        y = self.linear(x)
+        y = self.norm(y)
+        y = self.activation(y)
+        y = self.drop(y)
+        return y
 
 class ATFN(nn.Module):
     def __init__(self):
@@ -82,25 +78,14 @@ class ATFN(nn.Module):
         assert self.mode in ['reg','cls']
         
         self.feature_dim = self.ModelConfig.ModelParas['feature_dim']
-        self.hidden_dim = self.ModelConfig.ModelParas['hidden_dim']
+        self.hidden_dims = self.ModelConfig.ModelParas['hidden_dims']
         self.dropout = self.ModelConfig.ModelParas['dropout']
-        
-        self.post_hidden_dim = self.ModelConfig.ModelParas['post_hidden_dim']
-        self.post_dropout = self.ModelConfig.ModelParas['post_drouput']
-        
+        self.post_dropout = self.ModelConfig.ModelParas['post_dropout']
         self.output_dim = self.ModelConfig.ModelParas['num_classes'] if self.mode=='cls' else 1
-        
         
         self.activation_mode = self.ModelConfig.ModelParas['activation']
         
         assert self.activation_mode in  ['relu','leaky_relu','tanh']
-        
-        if self.activation_mode == 'relu':
-            self.activation = F.relu
-        elif self.activation_mode == 'leaky_relu':
-            self.activation = F.leaky_relu
-        elif self.activation_mode == 'tanh':
-            self.activation = F.tanh
         
         if self.mode=='reg':
             self.output_activation_mode = self.ModelConfig.ModelParas['output_activation']
@@ -108,37 +93,37 @@ class ATFN(nn.Module):
             self.output_activation_mode = self.ModelConfig.ModelParas['output_activation_for_classification']
         
         assert self.output_activation_mode in  ['relu','leaky_relu','tanh']
-        
-        if self.output_activation_mode == 'relu':
-            self.output_activation = F.relu
-        elif self.output_activation_mode == 'leaky_relu':
-            self.output_activation = F.leaky_relu
-        elif self.output_activation_mode == 'tanh':
-            self.output_activation = torch.tanh
             
+        self.layers = nn.Sequential()
         
-        self.subnet = SubNet(self.feature_dim,self.hidden_dim, self.dropout)
-        
-        self.post_dropout = nn.Dropout(self.post_dropout)
-        self.post_linear1 = nn.Linear(self.hidden_dim,self.post_hidden_dim)
-        self.post_norm1 = nn.BatchNorm1d(self.post_hidden_dim)
-        self.post_linear2 = nn.Linear(self.post_hidden_dim,self.post_hidden_dim)
-        self.post_norm2 = nn.BatchNorm1d(self.post_hidden_dim)
-        self.output_layer = nn.Linear(self.post_hidden_dim,self.output_dim)
+        self.__init__layers()
     
+    def __init__layers(self):
+        '''
+        init self layers
+        '''
+        cur_dim = self.feature_dim
+        for i,dim in enumerate(self.hidden_dims):
+            self.layers.add_module('linear_{}'.format(i),SubNet(
+                in_size=cur_dim,
+                out_size=dim,
+                dropout=self.dropout,
+                activation=self.activation_mode
+            ))
+            cur_dim = dim
+        
+        self.layers.add_module('linear_{}'.format(len(self.hidden_dims)),SubNet(
+            in_size = cur_dim,
+            out_size = self.output_dim,
+            dropout = self.post_dropout,
+            activation = self.output_activation_mode
+        ))
+        
     def forward(self,x):
         '''
         Args:
             x: tensor of shape (batch_size, in_size) # in_size=feature_dim
         '''
-        if len(x.shape)>2:
-            x = x.squeeze(1)
         
-        x_h = self.subnet(x)
-        y = self.activation(self.post_norm1(self.post_linear1(x_h)),inplace=True)
-        y = self.activation(self.post_norm2(self.post_linear2(y)),inplace=True)
-        y = self.post_dropout(y)
-        y = self.output_activation(self.output_layer(y))
-        
-        return y
+        return self.layers(x)
         

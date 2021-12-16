@@ -8,14 +8,13 @@
 '''
 
 # here put the import lib
-from typing import OrderedDict
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 import sys
 
-from torch.nn.modules import conv
 sys.path.append('../../')
 
 from configure.config import Model_ACN_Config
@@ -24,7 +23,13 @@ class SubConvNet(nn.Module):
     '''
     sub 1-D conv Net
     '''
-    def __init__(self,in_channels,out_channels,conv_kernel_size,pooling_kernel_size,dropout,activation):
+    def __init__(self,
+                 in_channels,
+                 out_channels,
+                 conv_kernel_size,
+                 pooling_kernel_size,
+                 dropout,
+                 activation):
         # input shape: (batch_size,C_in,feature_dim)
         # output shape: (batch_size,C_out,feature_dim/2)
         # stride = 1
@@ -42,31 +47,26 @@ class SubConvNet(nn.Module):
         self.padding_mode = 'zeros'
         
         self.pooling_kernel_size = pooling_kernel_size
+        self.dropout = dropout
         
-        self.conv1 = nn.Conv1d(
+        self.conv = nn.Conv1d( # input: (feature_dim,in_channels)
             in_channels = self.in_channels,
             out_channels = self.out_channels,
             kernel_size = self.conv_kernel_size,
             padding = self.padding,
             padding_mode= self.padding_mode,
-            stride = self.stride)
+            stride = self.stride) # (feature_dim,out_channels)
         
-        self.conv2 = nn.Conv1d(
-            in_channels = self.out_channels,
-            out_channels = self.out_channels,
-            kernel_size = self.conv_kernel_size,
-            padding = self.padding,
-            padding_mode= self.padding_mode,
-            stride = self.stride)
-
-        self.pooling = nn.MaxPool1d(
-            kernel_size=self.pooling_kernel_size,
-            stride = self.pooling_kernel_size
-        )
-        
+        if self.pooling_kernel_size>0:
+            self.pooling = nn.MaxPool1d(
+                kernel_size=self.pooling_kernel_size,
+                stride=self.pooling_kernel_size,
+            )
         self.norm = nn.BatchNorm1d(self.out_channels)
-        self.drop = nn.Dropout(p=dropout)
         
+        if self.dropout>0:
+            self.dropout_layer = nn.Dropout(p=self.dropout)
+                
         self.activation_mode = activation
         assert self.activation_mode in ['relu','leaky_relu','tanh']
         
@@ -83,12 +83,13 @@ class SubConvNet(nn.Module):
             x: tensor of shape (batch_size,in_channels,in_size) # in_size=feature_dim
         '''
         
-        
-        y = self.conv1(x)
-        y = self.conv2(y)
+        y = self.conv(x)
+        if self.pooling_kernel_size>0:
+            y = self.pooling(y)
         y = self.norm(y)
-        y = self.activation(self.pooling(y))
-        y = self.drop(y)
+        y = self.activation(y)
+        if self.dropout>0:
+            y = self.dropout_layer(y)
         return y
 
 class ACN(nn.Module):
@@ -101,16 +102,20 @@ class ACN(nn.Module):
         self.ModelConfig = Model_ACN_Config()
         self.feature_dim = self.ModelConfig.ModelParas['feature_dim']
         self.mode = self.ModelConfig.mode
+        # parameters
         self.channels = self.ModelConfig.ModelParas['channels']
+        self.kernels = self.ModelConfig.ModelParas['kernels']
+        self.pooling_kernels = self.ModelConfig.ModelParas['pooling_kernels']
+        self.dropout_fracs = self.ModelConfig.ModelParas['dropout']
+        self.conv_activation = self.ModelConfig.ModelParas['activation']
         self.conv_layers = nn.Sequential()
         self.conv_layer_init()
-            
+        
+        # output    
         self.output_dropout = nn.Dropout(p=self.ModelConfig.ModelParas['dropout'])
         self.output_dim = self.ModelConfig.ModelParas['num_classes'] if self.mode=='cls' else 1
-
         self.output_hidden_dim = self.ModelConfig.ModelParas['output_hidden_dim']
         self.output_layer = nn.Linear(self.output_hidden_dim,self.output_dim)
-        
         if self.mode=='reg':
             self.output_activation_mode = self.ModelConfig.ModelParas['output_activation']
         else:#classification
@@ -125,24 +130,22 @@ class ACN(nn.Module):
             
     def conv_layer_init(self):
         assert len(self.channels) > 0
-        self.conv_layers.add_module('conv_0',SubConvNet(
-            in_channels=1,
-            out_channels=self.channels[0],
-            conv_kernel_size=self.ModelConfig.ModelParas['kernel_size'],
-            pooling_kernel_size=self.ModelConfig.ModelParas['pooling_kernel_size'],
-            dropout=self.ModelConfig.ModelParas['dropout'],
-            activation= self.ModelConfig.ModelParas['activation']        
-        ))
-        for idx in range(len(self.channels)-1):
-            self.conv_layers.add_module('conv_{0}'.format(idx+1),SubConvNet(
-            in_channels=self.channels[idx],
-            out_channels=self.channels[idx+1],
-            conv_kernel_size=self.ModelConfig.ModelParas['kernel_size'],
-            pooling_kernel_size=self.ModelConfig.ModelParas['pooling_kernel_size'],
-            dropout=self.ModelConfig.ModelParas['dropout'],
-            activation= self.ModelConfig.ModelParas['activation']
-                
-        ))
+        assert len(self.channels)==len(self.kernels)
+        assert len(self.channels)==len(self.pooling_kernels)
+        assert len(self.channels)==len(self.dropout_fracs)
+        
+        cur_channel = 1
+        for idx in range(len(self.channels)):
+            self.conv_layers.add_module('conv_{}'.format(idx),SubConvNet(
+                in_channels=cur_channel,
+                out_channels=self.channels[idx],
+                conv_kernel_size=self.kernels[idx],
+                pooling_kernel_size=self.pooling_kernels[idx],
+                dropout=self.dropout_fracs[idx],
+                activation=self.conv_activation
+            ))
+            cur_channel = self.channels[idx]
+            
         
     def forward(self,x):
         '''
@@ -153,9 +156,7 @@ class ACN(nn.Module):
         # (batch_size,out_channels,out_size)
         x_h = torch.flatten(x_h,1,-1)
         # (batch_size,out_channels*out_size)
-            
-        y = self.output_dropout(x_h)
-
-        y = self.output_activation(self.output_layer(y))    
+        y = self.output_activation(self.output_layer(x_h))
+        y = self.output_layer(y) 
             
         return y

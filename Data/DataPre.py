@@ -64,7 +64,7 @@ class DataPreProcessor():
         # melspectrogram
         mels = librosa.feature.melspectrogram(y=y,sr=sr,n_fft=n_fft,hop_length=hop_length).T # (seq_len,128)
         
-        return np.concatenate([f0,mfcc,cqt,tonnetz,spectral_features,tpg,mels],axis=-1) # (seq_len,562)
+        return np.concatenate([f0,mfcc,cqt,tonnetz,spectral_features,tpg,mels],axis=-1) # (seq_len,582)
 
     def padding(self,feature,MAX_LEN):
         # input: (seqlen,feature_dim)
