@@ -18,8 +18,9 @@ import logging
 
 
 LabelParas = {
-    'low_thres':-0.1,
-    'high_thres':0.1
+    'low_thres':-1,
+    'high_thres':-1
+    
 }
 
 class DataPreConfig():
@@ -56,11 +57,12 @@ class DataPreConfig():
         # output feature
         self.suffix = '.pkl'       
         self.feature_store_dir = {
-            name:os.path.join(self.DATA_dir,name,'feature_all'+self.suffix) for name in self.dataset_names
+            name:os.path.join(self.DATA_dir,name,'feature_all_anger'+self.suffix) for name in self.dataset_names
         }      
         # feature_statistics
         self.feature_statistics_dir = os.path.join(self.WORK_dir,'Data','Scripts','Statistics_All.txt')
 
+        self.num_classes = 2
 class Emoconfig():
     def __init__(self):
         self.Annotation = {
@@ -127,7 +129,7 @@ class Model_ATFN_Config():
             'post_hidden_dim':4,
             'post_dropout':0.2,
             
-            'num_classes' :3,
+            'num_classes' :2,
             
             'activation':'leaky_relu', # must in ['relu','leaky_relu','tanh']
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
@@ -140,7 +142,7 @@ class Model_ATFN_Config():
 
 class Model_ACN_Config():
     def __init__(self):
-        self.mode = 'reg'
+        self.mode = 'cls'
         
         self.commonParas = {
             'early_stop': 16,
@@ -149,7 +151,7 @@ class Model_ACN_Config():
         
         self.ModelParas = {
             'feature_dim':562,
-            'num_classes' :3,
+            'num_classes' :2,
             'activation':'relu',# must in ['relu','leaky_relu','tanh']
                         
             'channels' :[16,64,64,128,128,256,256], # 
@@ -176,7 +178,7 @@ class Model_ALSTM_Config():
             'gen_lite_model_for_mobile':True,
         }
         self.ModelParas = {
-            'num_classes':3,
+            'num_classes':2,
             'feature_dim':33,
             'sequence_length': 588, # remember to check the './Data/Scripts/Statistics.txt'
             

@@ -60,7 +60,6 @@ class AudioDataset(Dataset):
             # average length 
             for i in range(feature_out.shape[0]):
                 feature_out[i] = np.mean(feature[i][feature[i].any(1)],axis=0) # remove all zeros !!!
-                print("before:{},after:{}".format(feature[i].shape,feature[i][feature[i].any(1)].shape))
 
             self.DatasetMap[dsname]['feature'] = feature_out
 

@@ -1,0 +1,103 @@
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: feature_dim:562
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: num_classes:2
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: activation:relu
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: channels:[16, 64, 64, 128, 128, 256, 256]
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: kernels:[7, 7, 7, 5, 5, 3, 3]
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: pooling_kernels:[1, 1, 4, 1, 4, 1, 4]
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: dropout:[0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2]
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_hidden_dim:2048
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_dropout:0.2
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_activation:tanh
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_activation_for_classification:relu
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: learning_rate:1e-05
+2021-12-19 18:24:22,855 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: weight_decay:0.0001
+2021-12-19 18:24:25,098 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:1, best epoch:0,loss: 0.2383
+2021-12-19 18:24:25,157 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:25,534 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2035
+2021-12-19 18:24:25,546 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:25,549 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:165] - INFO: Best epoch:1, min val loss: 0.2035
+2021-12-19 18:24:25,553 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:168] - INFO: Best Model are saved at /home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-19-06-24-22-ACN-reg-best.pt
+2021-12-19 18:24:27,811 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:2, best epoch:1,loss: 0.2298
+2021-12-19 18:24:27,873 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:28,250 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2057
+2021-12-19 18:24:28,260 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:30,393 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:3, best epoch:1,loss: 0.2300
+2021-12-19 18:24:30,458 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:31,245 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2073
+2021-12-19 18:24:31,261 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:33,514 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:4, best epoch:1,loss: 0.2265
+2021-12-19 18:24:33,601 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:33,975 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2063
+2021-12-19 18:24:33,986 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:36,114 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:5, best epoch:1,loss: 0.2314
+2021-12-19 18:24:36,180 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:36,531 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2020
+2021-12-19 18:24:36,551 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:36,556 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:165] - INFO: Best epoch:5, min val loss: 0.2020
+2021-12-19 18:24:36,563 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:168] - INFO: Best Model are saved at /home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-19-06-24-22-ACN-reg-best.pt
+2021-12-19 18:24:38,784 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:6, best epoch:5,loss: 0.2290
+2021-12-19 18:24:38,851 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:39,221 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2002
+2021-12-19 18:24:39,233 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:39,237 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:165] - INFO: Best epoch:6, min val loss: 0.2002
+2021-12-19 18:24:39,242 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:168] - INFO: Best Model are saved at /home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-19-06-24-22-ACN-reg-best.pt
+2021-12-19 18:24:41,462 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:7, best epoch:6,loss: 0.2315
+2021-12-19 18:24:41,525 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:41,883 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.1987
+2021-12-19 18:24:41,894 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:41,897 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:165] - INFO: Best epoch:7, min val loss: 0.1987
+2021-12-19 18:24:41,902 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:168] - INFO: Best Model are saved at /home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-19-06-24-22-ACN-reg-best.pt
+2021-12-19 18:24:44,136 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:8, best epoch:7,loss: 0.2304
+2021-12-19 18:24:44,203 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:44,595 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.1997
+2021-12-19 18:24:44,606 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:46,799 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:9, best epoch:7,loss: 0.2274
+2021-12-19 18:24:46,867 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:47,223 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2011
+2021-12-19 18:24:47,235 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:49,378 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:10, best epoch:7,loss: 0.2286
+2021-12-19 18:24:49,468 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:49,841 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2007
+2021-12-19 18:24:49,853 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:52,043 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:11, best epoch:7,loss: 0.2298
+2021-12-19 18:24:52,110 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:52,503 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2017
+2021-12-19 18:24:52,516 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:54,684 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:12, best epoch:7,loss: 0.2270
+2021-12-19 18:24:54,784 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:55,193 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.1985
+2021-12-19 18:24:55,214 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:24:55,220 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:165] - INFO: Best epoch:12, min val loss: 0.1985
+2021-12-19 18:24:55,227 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:168] - INFO: Best Model are saved at /home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-19-06-24-22-ACN-reg-best.pt
+2021-12-19 18:24:57,449 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:13, best epoch:12,loss: 0.2261
+2021-12-19 18:24:57,536 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:24:57,891 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2017
+2021-12-19 18:24:57,903 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:25:00,038 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:14, best epoch:12,loss: 0.2247
+2021-12-19 18:25:00,106 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:25:00,491 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.1978
+2021-12-19 18:25:00,502 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:25:00,506 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:165] - INFO: Best epoch:14, min val loss: 0.1978
+2021-12-19 18:25:00,510 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:168] - INFO: Best Model are saved at /home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-19-06-24-22-ACN-reg-best.pt
+2021-12-19 18:25:02,688 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:15, best epoch:14,loss: 0.2243
+2021-12-19 18:25:02,754 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:25:03,165 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2035
+2021-12-19 18:25:03,177 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:25:05,355 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:16, best epoch:14,loss: 0.2246
+2021-12-19 18:25:05,423 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:25:05,791 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.1981
+2021-12-19 18:25:05,812 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:25:07,970 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:17, best epoch:14,loss: 0.2211
+2021-12-19 18:25:08,038 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:25:08,411 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.1985
+2021-12-19 18:25:08,425 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:25:10,578 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:18, best epoch:14,loss: 0.2235
+2021-12-19 18:25:10,647 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:25:10,997 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.2020
+2021-12-19 18:25:11,010 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:25:13,138 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:143] - INFO: TRAINING: epoch:19, best epoch:14,loss: 0.2250
+2021-12-19 18:25:13,203 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:159] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[   0 1366    0 1366] |
+2021-12-19 18:25:13,574 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:228] - INFO: EVALUATING: loss: 0.1965
+2021-12-19 18:25:13,588 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:246] - INFO: acc:1.0000 |f1score:1.0000 |mae:0.5000 |CM:[  0 239   0 239] |
+2021-12-19 18:25:13,591 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:165] - INFO: Best epoch:19, min val loss: 0.1965
+2021-12-19 18:25:13,596 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:168] - INFO: Best Model are saved at /home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-19-06-24-22-ACN-reg-best.pt

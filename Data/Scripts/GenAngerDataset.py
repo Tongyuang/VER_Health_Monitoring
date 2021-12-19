@@ -78,7 +78,7 @@ class AngerDatasetGenerator():
             try:
                 with open(output_file,'wb') as wf:
                     pickle.dump(self.angerDataset[name],wf)
-                print('Lite features are saved at {}'.format(output_file))
+                print('Anger features are saved at {}'.format(output_file))
             
             except:
                 print('Cannot Save Feature at {}, cannot open target file.'.format(output_file))

@@ -16,27 +16,35 @@ from tqdm import tqdm
 import sys
 sys.path.append('../')
 
-from model.ATFN import ATFN
+import time
 from utils.CUDAinit import CUDA_Init
-
-from configure.config import Model_ATFN_Config
+from model.ModelSelector import ModelSelector
 from utils.metrics import Metrics
 from utils.ModelUtils import count_parameters
 from torch.utils.data import Dataset,DataLoader
 from Data.Dataloader.AudioDataloader import AudioDataLoader
 
+import configure.config as cfg
 import torch
 import torch.nn as nn
 from torch import optim
-from torch.utils.mobile_optimizer import optimize_for_mobile
+
+
 
 class ATFN_Evaluator():
-    # can only load ATFN
-    def __init__(self,model_save_dir,dataloader):
+    
+    def __init__(self,model_save_dir,model_name):
         device_name,self.device = CUDA_Init()
         # model
-        self.model= ATFN().to(self.device)
-        self.model_config = Model_ATFN_Config()
+        self.model = ModelSelector(model_name)
+        self.model.to(self.device)
+        if self.model_name == 'ALSTM':
+            self.model_config = cfg.Model_ALSTM_Config()
+        elif self.model_name == 'ATFN':
+            self.model_config = cfg.Model_ATFN_Config()
+        elif self.model_name == 'ACN':
+            self.model_config = cfg.Model_ACN_Config()
+
         self.mode = self.model_config.mode
         # load dict
         assert os.path.exists(model_save_dir)
@@ -46,67 +54,22 @@ class ATFN_Evaluator():
             raise Exception("Cannot load model from {}, please check the model structure".format(model_save_dir))
         
         print("This Model has {} parameters".format(count_parameters(self.model)))
-
-        self.dataloader = dataloader
     
-    def do_evaluate(self):
-        # returns pred,true
+    def forward(self,input):
+        '''
+        input: feature of shape(1, feature_dim)
+        output: (1,) if reg mode, (num_classes,) if cls mode
+                inference time (in sec)
+        '''
         self.model.eval()
-        y_pred,y_true = list(),list()
-        
-        with torch.no_grad():
-            with tqdm(self.dataloader['test']) as td:
-                  
-                  for batch_data in td:
-                    input = batch_data['feature'].to(self.device)
-                    lbl = (batch_data['reg_lbl'] if self.mode=='reg' else batch_data['cls_lbl']).to(self.device)
-                    # output
-                    outputs = self.model(input)
-                    y_pred.append(outputs.cpu())
-                    y_true.append(lbl.cpu())
-        
-        preds, trues = torch.cat(y_pred), torch.cat(y_true)
-
-        return (preds,trues)
-
-    def do_evaluate_from_features(self,feature_in):
-        # feature_in must in shape ( num_samples, feature_dim)
-        # returns preds
-        assert (len(feature_in.shape)==2) and \
-            feature_in.shape[-1]==self.model_config.ModelParas["feature_dim"]
-        # dataloader
-        DL = self.make_dataloader(feature_in)
-        preds = list()
-        with torch.no_grad():
-            with tqdm(DL) as td:
-                  for batch_data in td:
-                    input = batch_data.to(self.device)
-                    # output
-                    outputs = self.model(input)
-                    preds.append(outputs.cpu())
-        
-        preds = torch.cat(preds)
-        # flatten
-        preds = preds.view(-1).cpu().detach().numpy()
-               
-        return (preds)
-        
-    def make_dataloader(self,feature_in):
-        DS = FeatureDataset(feature_in)
-        return DataLoader(DS,batch_size=128,shuffle=False)     
+        input = input.to(self.device)
+        tic = time.time()
+        output = self.model(input)
+        output = output.cpu()
+        toc = time.time()
+        return output,(toc-tic)
     
     
-    
-class FeatureDataset(Dataset):
-    def __init__(self,feature):
-        assert len(feature.shape)==2
-        self.feature = feature
-        
-    def __len__(self):
-        return self.feature.shape[0]
-
-    def __getitem__(self, index):
-        return self.feature[index]
     
 
 if __name__ == '__main__':

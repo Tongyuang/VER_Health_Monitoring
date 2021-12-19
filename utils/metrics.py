@@ -16,7 +16,7 @@ import numpy as np
 import sys
 sys.path.append('../')
 import configure.config as cfg
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, precision_score,recall_score
 from sklearn.metrics import confusion_matrix
 
 class Metrics():
@@ -103,12 +103,14 @@ class Metrics():
     
         mae = np.mean(np.absolute(preds - truth))
         
-        f1score = f1_score(preds,truth,average='weighted')
-        acc = accuracy_score(preds,truth)
         
+        acc = accuracy_score(truth,preds)
+        prec = precision_score(truth,preds)
+        recall = recall_score(truth,preds)
+        f1score = f1_score(truth,preds,average='weighted')
         cm = confusion_matrix(truth,preds)
 
-        output_metrics = {'mae':mae,'f1score':f1score,'acc':acc,'CM':cm}
+        output_metrics = {'mae':mae,'f1score':f1score,'acc':acc,'prec':prec,'rec':recall,'CM':cm}
         return output_metrics
 
     def cls21hot(self,num_classes,y_in):

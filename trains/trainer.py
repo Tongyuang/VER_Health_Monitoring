@@ -115,8 +115,12 @@ class Trainer():
                         
                     lbl = batch_data['reg_lbl']
                     if self.mode=='cls':
-                        lbl = self.metrics.three_classifier(lbl) # [0,1,2]
-                    lbl = lbl.view(-1).to(device)            
+                        if self.datapre_config.num_classes==3:
+                            lbl = self.metrics.three_classifier(lbl) # [0,1,2]
+                        else: # 2
+                            lbl = self.metrics.two_classifier(lbl) # [0,1]
+                    
+                    lbl = lbl.view(-1).to(device,dtype=torch.long)            
                         
                     # to device
                     input = input.to(device)
@@ -125,7 +129,7 @@ class Trainer():
                     self.optimizer.zero_grad()
                     # forward
                     outputs = self.model(input)
-                    loss = self.criterion(outputs.view(-1),lbl)
+                    loss = self.criterion(outputs,lbl)
                     # update
                     loss.backward()
                     self.optimizer.step()
@@ -143,8 +147,13 @@ class Trainer():
             if self.mode=='cls': # preds shape = (batch,3)
                 pred = self.metrics.onehot2cls(pred)
             else: # reg, preds shape (batch,1)
-                pred = self.metrics.three_classifier(pred) # [0,1,2]
-                true = self.metrics.three_classifier(true)
+                if self.datapre_config.num_classes==3:
+                    pred = self.metrics.three_classifier(pred) # [0,1,2]
+                    true = self.metrics.three_classifier(true)
+                else: # 2
+                    pred = self.metrics.two_classifier(pred) # [0,1]
+                    true = self.metrics.two_classifier(true)
+
             train_results = self.metrics.metrics(pred,true)
             output_str = self.get_logger_str(train_results)
             self.logger.info(output_str)
@@ -197,15 +206,18 @@ class Trainer():
                     
                     lbl = batch_data['reg_lbl']
                     if self.mode=='cls':
-                        lbl = self.metrics.three_classifier(lbl) # [0,1,2]
-                    lbl = lbl.view(-1).to(device)       
-                        
+                        if self.datapre_config.num_classes==3:
+                            lbl = self.metrics.three_classifier(lbl) # [0,1,2]
+                        else: # 2
+                            lbl = self.metrics.two_classifier(lbl) # [0,1]
+                    
                     # to device
+                    lbl = lbl.view(-1).to(device,dtype=torch.long)     
                     input = input.to(device)
                     # forward
                     outputs = self.model(input)
                     # loss
-                    loss = self.criterion(outputs.view(-1),lbl)
+                    loss = self.criterion(outputs,lbl)
                     # results
                     eval_loss += loss.item()
                     y_pred.append(outputs.cpu())
@@ -217,11 +229,17 @@ class Trainer():
 
             # evaluate
             pred, true = torch.cat(y_pred), torch.cat(y_true) 
+            
             if self.mode=='cls': # preds shape = (batch,3)
                 pred = self.metrics.onehot2cls(pred)
             else: # reg, preds shape (batch,1)
-                pred = self.metrics.three_classifier(pred) # [0,1,2]
-                true = self.metrics.three_classifier(true)
+                if self.datapre_config.num_classes==3:
+                    pred = self.metrics.three_classifier(pred) # [0,1,2]
+                    true = self.metrics.three_classifier(true)
+                else: # 2
+                    pred = self.metrics.two_classifier(pred) # [0,1]
+                    true = self.metrics.two_classifier(true)
+                    
             valid_results = self.metrics.metrics(pred,true)
             output_str = self.get_logger_str(valid_results)
            
@@ -234,7 +252,7 @@ class Trainer():
         '''
         output_str = ""
         for key in result.keys():
-            if key in ['acc','f1score','mae']:
+            if key in ['acc','prec','recall','f1score','mae']:
                 output_str += ("{key}:{val:.4f} |".format(key=key,val=result[key]))
             elif key == 'CM':
                 output_str += ("{key}:{val} |".format(key=key,val=result[key].flatten()))
