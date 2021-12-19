@@ -1,0 +1,193 @@
+DATASET IEMOCAP
+mode: train
+key:feature,shape:(7529, 588, 562)
+key:num_samples,value:7529
+key:reg_lbls,shape:(7529, 1)
+key:cls_lbls,shape:(7529, 1)
+mode: valid
+key:feature,shape:(1506, 588, 562)
+key:num_samples,value:1506
+key:reg_lbls,shape:(1506, 1)
+key:cls_lbls,shape:(1506, 1)
+mode: test
+key:feature,shape:(1004, 588, 562)
+key:num_samples,value:1004
+key:reg_lbls,shape:(1004, 1)
+key:cls_lbls,shape:(1004, 1)
+--------------------
+DATASET CH_SIMS
+mode: train
+key:feature,shape:(1710, 402, 562)
+key:num_samples,value:1710
+key:reg_lbls,shape:(1710, 1)
+key:cls_lbls,shape:(1710, 1)
+mode: valid
+key:feature,shape:(342, 402, 562)
+key:num_samples,value:342
+key:reg_lbls,shape:(342, 1)
+key:cls_lbls,shape:(342, 1)
+mode: test
+key:feature,shape:(229, 402, 562)
+key:num_samples,value:229
+key:reg_lbls,shape:(229, 1)
+key:cls_lbls,shape:(229, 1)
+--------------------
+DATASET IEMOCAP
+mode: train
+key:feature,shape:(75, 588, 562)
+key:num_samples,value:75
+key:reg_lbls,shape:(75, 1)
+key:cls_lbls,shape:(75, 1)
+mode: valid
+key:feature,shape:(15, 588, 562)
+key:num_samples,value:15
+key:reg_lbls,shape:(15, 1)
+key:cls_lbls,shape:(15, 1)
+mode: test
+key:feature,shape:(10, 588, 562)
+key:num_samples,value:10
+key:reg_lbls,shape:(10, 1)
+key:cls_lbls,shape:(10, 1)
+--------------------
+DATASET CH_SIMS
+mode: train
+key:feature,shape:(75, 402, 562)
+key:num_samples,value:75
+key:reg_lbls,shape:(75, 1)
+key:cls_lbls,shape:(75, 1)
+mode: valid
+key:feature,shape:(15, 402, 562)
+key:num_samples,value:15
+key:reg_lbls,shape:(15, 1)
+key:cls_lbls,shape:(15, 1)
+mode: test
+key:feature,shape:(10, 402, 562)
+key:num_samples,value:10
+key:reg_lbls,shape:(10, 1)
+key:cls_lbls,shape:(10, 1)
+--------------------
+DATASET IEMOCAP
+mode: train
+key:feature,shape:(75, 588, 562)
+key:num_samples,value:75
+key:reg_lbls,shape:(75, 1)
+DATASET IEMOCAP
+mode: train
+key:feature,shape:(75, 588, 562)
+key:num_samples,value:75
+key:reg_lbls,shape:(75, 1)
+anger frac:0.1867
+key:cls_lbls,shape:(75, 1)
+mode: valid
+key:feature,shape:(15, 588, 562)
+key:num_samples,value:15
+key:reg_lbls,shape:(15, 1)
+anger frac:0.2000
+key:cls_lbls,shape:(15, 1)
+mode: test
+key:feature,shape:(10, 588, 562)
+key:num_samples,value:10
+key:reg_lbls,shape:(10, 1)
+anger frac:0.3000
+key:cls_lbls,shape:(10, 1)
+--------------------
+DATASET CH_SIMS
+mode: train
+key:feature,shape:(75, 402, 562)
+key:num_samples,value:75
+key:reg_lbls,shape:(75, 1)
+anger frac:0.0533
+key:cls_lbls,shape:(75, 1)
+mode: valid
+key:feature,shape:(15, 402, 562)
+key:num_samples,value:15
+key:reg_lbls,shape:(15, 1)
+anger frac:0.1333
+key:cls_lbls,shape:(15, 1)
+mode: test
+key:feature,shape:(10, 402, 562)
+key:num_samples,value:10
+key:reg_lbls,shape:(10, 1)
+anger frac:0.0000
+key:cls_lbls,shape:(10, 1)
+--------------------
+DATASET IEMOCAP
+mode: train
+key:feature,shape:(7529, 588, 562)
+key:num_samples,value:7529
+key:reg_lbls,shape:(7529, 1)
+anger frac:0.1955
+key:cls_lbls,shape:(7529, 1)
+mode: valid
+key:feature,shape:(1506, 588, 562)
+key:num_samples,value:1506
+key:reg_lbls,shape:(1506, 1)
+anger frac:0.2045
+key:cls_lbls,shape:(1506, 1)
+mode: test
+key:feature,shape:(1004, 588, 562)
+key:num_samples,value:1004
+key:reg_lbls,shape:(1004, 1)
+anger frac:0.1952
+key:cls_lbls,shape:(1004, 1)
+--------------------
+DATASET CH_SIMS
+mode: train
+key:feature,shape:(1710, 402, 562)
+key:num_samples,value:1710
+key:reg_lbls,shape:(1710, 1)
+anger frac:0.0602
+key:cls_lbls,shape:(1710, 1)
+mode: valid
+key:feature,shape:(342, 402, 562)
+key:num_samples,value:342
+key:reg_lbls,shape:(342, 1)
+anger frac:0.0614
+key:cls_lbls,shape:(342, 1)
+mode: test
+key:feature,shape:(229, 402, 562)
+key:num_samples,value:229
+key:reg_lbls,shape:(229, 1)
+anger frac:0.0480
+key:cls_lbls,shape:(229, 1)
+--------------------
+DATASET IEMOCAP
+mode: train
+key:feature,shape:(7529, 588, 562)
+key:num_samples,value:7529
+key:reg_lbls,shape:(7529, 1)
+anger frac:0.1280
+key:cls_lbls,shape:(7529, 1)
+mode: valid
+key:feature,shape:(1506, 588, 562)
+key:num_samples,value:1506
+key:reg_lbls,shape:(1506, 1)
+anger frac:0.1162
+key:cls_lbls,shape:(1506, 1)
+mode: test
+key:feature,shape:(1004, 588, 562)
+key:num_samples,value:1004
+key:reg_lbls,shape:(1004, 1)
+anger frac:0.1295
+key:cls_lbls,shape:(1004, 1)
+--------------------
+DATASET CH_SIMS
+mode: train
+key:feature,shape:(1710, 402, 562)
+key:num_samples,value:1710
+key:reg_lbls,shape:(1710, 1)
+anger frac:0.2351
+key:cls_lbls,shape:(1710, 1)
+mode: valid
+key:feature,shape:(342, 402, 562)
+key:num_samples,value:342
+key:reg_lbls,shape:(342, 1)
+anger frac:0.1871
+key:cls_lbls,shape:(342, 1)
+mode: test
+key:feature,shape:(229, 402, 562)
+key:num_samples,value:229
+key:reg_lbls,shape:(229, 1)
+anger frac:0.1965
+key:cls_lbls,shape:(229, 1)
+--------------------

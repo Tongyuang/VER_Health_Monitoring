@@ -57,16 +57,15 @@ class SubConvNet(nn.Module):
             padding_mode= self.padding_mode,
             stride = self.stride) # (feature_dim,out_channels)
         
-        if self.pooling_kernel_size>0:
-            self.pooling = nn.MaxPool1d(
-                kernel_size=self.pooling_kernel_size,
-                stride=self.pooling_kernel_size,
-            )
+        self.pooling = nn.MaxPool1d(
+            kernel_size=self.pooling_kernel_size,
+            stride=self.pooling_kernel_size,
+        )
+
         self.norm = nn.BatchNorm1d(self.out_channels)
         
-        if self.dropout>0:
-            self.dropout_layer = nn.Dropout(p=self.dropout)
-                
+        self.dropout_layer = nn.Dropout(p=self.dropout)
+
         self.activation_mode = activation
         assert self.activation_mode in ['relu','leaky_relu','tanh']
         
@@ -82,14 +81,12 @@ class SubConvNet(nn.Module):
         Args:
             x: tensor of shape (batch_size,in_channels,in_size) # in_size=feature_dim
         '''
-        
         y = self.conv(x)
-        if self.pooling_kernel_size>0:
-            y = self.pooling(y)
+        y = self.pooling(y)
         y = self.norm(y)
         y = self.activation(y)
-        if self.dropout>0:
-            y = self.dropout_layer(y)
+        y = self.dropout_layer(y) 
+
         return y
 
 class ACN(nn.Module):
@@ -112,7 +109,7 @@ class ACN(nn.Module):
         self.conv_layer_init()
         
         # output    
-        self.output_dropout = nn.Dropout(p=self.ModelConfig.ModelParas['dropout'])
+        self.output_dropout = nn.Dropout(p=self.ModelConfig.ModelParas['output_dropout'])
         self.output_dim = self.ModelConfig.ModelParas['num_classes'] if self.mode=='cls' else 1
         self.output_hidden_dim = self.ModelConfig.ModelParas['output_hidden_dim']
         self.output_layer = nn.Linear(self.output_hidden_dim,self.output_dim)
@@ -157,6 +154,5 @@ class ACN(nn.Module):
         x_h = torch.flatten(x_h,1,-1)
         # (batch_size,out_channels*out_size)
         y = self.output_activation(self.output_layer(x_h))
-        y = self.output_layer(y) 
             
         return y

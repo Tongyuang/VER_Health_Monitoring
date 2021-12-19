@@ -1,0 +1,16 @@
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: feature_dim:562
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: num_classes:3
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: activation:relu
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: channels:[16, 32, 32, 64, 64, 128, 128]
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: kernels:[7, 7, 7, 5, 5, 3, 3]
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: pooling_kernels:[1, 1, 4, 1, 4, 1, 4]
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: dropout:[0, 0, 0, 0, 0, 0.2, 0.2]
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_hidden_dim:1024
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_dropout:0.2
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_activation:tanh
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: output_activation_for_classification:relu
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: learning_rate:0.0001
+2021-12-16 22:00:22,842 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:89] - INFO: weight_decay:0.0001
+2021-12-16 22:00:23,230 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:140] - INFO: TRAINING: epoch:1, best epoch:0,loss: 0.5553
+2021-12-16 22:00:23,235 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:151] - INFO: acc:0.3867 |f1score:0.3025 |mae:0.7333 |CM:[48 84  0  0  0  0  8 10  0] |
+2021-12-16 22:00:23,428 - /home/tongyuang/code/VER_Health_Monitoring/trains/trainer.py[line:221] - INFO: EVALUATING: loss: 0.7348

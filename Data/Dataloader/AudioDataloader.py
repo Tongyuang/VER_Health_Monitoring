@@ -55,9 +55,14 @@ class AudioDataset(Dataset):
             if length>feature_length:
                 feature_length = length
                 
-            feature = np.transpose(feature,(1,0,2))
-            feature = np.mean(feature,axis=0,keepdims=False)
-            self.DatasetMap[dsname]['feature'] = feature
+            #feature = np.transpose(feature,(1,0,2))
+            feature_out = np.zeros((feature.shape[0],feature.shape[2])) # (num_samples,feature_dim)
+            # average length 
+            for i in range(feature_out.shape[0]):
+                feature_out[i] = np.mean(feature[i][feature[i].any(1)],axis=0) # remove all zeros !!!
+                print("before:{},after:{}".format(feature[i].shape,feature[i][feature[i].any(1)].shape))
+
+            self.DatasetMap[dsname]['feature'] = feature_out
 
         self.feature_length = feature_length
         

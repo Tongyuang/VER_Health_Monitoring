@@ -16,6 +16,7 @@ from utils.ModelUtils import count_parameters
 from model.ModelSelector import ModelSelector
 from trains.trainer import Trainer
 from Data.Dataloader.AudioDataloader import AudioDataLoader
+import argparse
 
 def start(model_name):
     # load device
@@ -32,7 +33,12 @@ def start(model_name):
     trainer.do_train(device)
 
 if __name__ == '__main__':
-    start('ACN')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-model_name',type=str,default='ACN',help='in "ATFN","ACN","ALSTM"')
+    
+    args = parser.parse_args()
+    
+    start(args.model_name)
     
 
     

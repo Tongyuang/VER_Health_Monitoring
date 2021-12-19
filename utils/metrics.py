@@ -2,12 +2,13 @@
 # -*- encoding: utf-8 -*-
 '''
 @File    :   metrics.py
-@Last Modified    :   2021/11/29 16:13:30
+@Last Modified    :   2021/12/19 18:00:42
 @Author  :   Yuang Tong 
 @Contact :   yuangtong1999@gmail.com
 '''
 
 # here put the import lib
+
 
 from timeit import main
 import torch
@@ -30,6 +31,7 @@ class Metrics():
         self.low_thres = cfg.LabelParas['low_thres']
         self.high_thres = cfg.LabelParas['high_thres']
         
+        
     def three_classifier(self,array_in):
         for i in range(len(array_in)):
             if array_in[i]<=self.low_thres:
@@ -40,17 +42,21 @@ class Metrics():
                 array_in[i] = 2
         
         return array_in
+    
+    def two_classifier(self,array_in):
+        for i in range(len(array_in)):
+            if array_in[i]<=self.low_thres:
+                array_in[i] = 0
+            else:
+                array_in[i] = 1
+        
+        return array_in
             
     def eval_regression(self,y_pred,y_true):
         '''
         args:
             y_pred : float between (-1,1)
             y_true : float between (-1,1)
-            mode: 'reg','cls',
-            low_thres,high_thres: 
-                (-1,low_thres): negative
-                (low_thres,high_thres): neutral
-                (high_thres,1): positive
         '''
         
         # flatten
@@ -85,8 +91,8 @@ class Metrics():
     def eval_classification(self,y_pred,y_true):
         '''
         args:
-            y_pred : num-classes-channel input e.g.:(0.1,0.8,0.1)
-            y_true : one-hot encoding e.g.:(0,1,0)
+            y_pred : class preds. e.g.: [0,0,1,1,2,2,3,3,]......
+            y_true : class preds. e.g.: [0,0,1,1,2,2,3,3,]......
 
         '''
         # to one dim
@@ -96,12 +102,6 @@ class Metrics():
         
     
         mae = np.mean(np.absolute(preds - truth))
-        tiny = 1e-5
-        if np.std(preds)==0:
-            preds[0]+=tiny
-        if np.std(truth)==0:
-            truth[0]+=tiny
-        #corr = np.corrcoef(preds, truth)[0][1]
         
         f1score = f1_score(preds,truth,average='weighted')
         acc = accuracy_score(preds,truth)
@@ -130,7 +130,6 @@ class Metrics():
         y_in.shape: tensor: (length,num_classes)
         y_out.shape: tensor: (length,1)
         '''
-        assert (y_in.shape[-1]==3)
         return torch.argmax(y_in,dim=1)
 
         

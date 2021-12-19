@@ -18,8 +18,8 @@ import logging
 
 
 LabelParas = {
-    'low_thres':0,
-    'high_thres':0.33
+    'low_thres':-0.1,
+    'high_thres':0.1
 }
 
 class DataPreConfig():
@@ -56,10 +56,10 @@ class DataPreConfig():
         # output feature
         self.suffix = '.pkl'       
         self.feature_store_dir = {
-            name:os.path.join(self.DATA_dir,name,'feature'+self.suffix) for name in self.dataset_names
+            name:os.path.join(self.DATA_dir,name,'feature_all'+self.suffix) for name in self.dataset_names
         }      
         # feature_statistics
-        self.feature_statistics_dir = os.path.join(self.WORK_dir,'Data','Scripts','Statistics.txt')
+        self.feature_statistics_dir = os.path.join(self.WORK_dir,'Data','Scripts','Statistics_All.txt')
 
 class Emoconfig():
     def __init__(self):
@@ -101,7 +101,7 @@ class Emoconfig():
 class DataLoaderConfig():
     def __init__(self):
         
-        self.BatchSize = 128
+        self.BatchSize = 32
         self.num_worker = 8
 
 class Model_ATFN_Config():
@@ -118,14 +118,14 @@ class Model_ATFN_Config():
         }
         
         self.ModelParas = {
-            'feature_dim':582,
+            'feature_dim':562,
             
             'hidden_dims' : [512,256,128,32,16],
             'hidden_dim': 32,
             'dropout': 0.2,
             
             'post_hidden_dim':4,
-            'post_drouput':0.2,
+            'post_dropout':0.2,
             
             'num_classes' :3,
             
@@ -140,7 +140,7 @@ class Model_ATFN_Config():
 
 class Model_ACN_Config():
     def __init__(self):
-        self.mode = 'cls'
+        self.mode = 'reg'
         
         self.commonParas = {
             'early_stop': 16,
@@ -148,21 +148,21 @@ class Model_ACN_Config():
         }
         
         self.ModelParas = {
-            'feature_dim':582,
+            'feature_dim':562,
             'num_classes' :3,
             'activation':'relu',# must in ['relu','leaky_relu','tanh']
                         
-            'channels' :[16,32,32,64,64,128,128], # 
+            'channels' :[16,64,64,128,128,256,256], # 
             'kernels': [7,7,7,5,5,3,3],# must odd number
-            'pooling_kernels' :[0,0,4,0,4,0,4], # 0 means no pooling
-            'dropout': [0,0,0,0,0,0.2,0.2],
+            'pooling_kernels' :[1,1,4,1,4,1,4], # 1 means no pooling
+            'dropout': [0.0,0.0,0.0,0.0,0.0,0.2,0.2],
             # output
-            'output_hidden_dim':9*128, # 
+            'output_hidden_dim':8*256, # 
             'output_dropout': 0.2,
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
             'output_activation_for_classification':'relu',
             
-            'learning_rate': 1e-4,
+            'learning_rate': 1e-5,
             'weight_decay': 1e-4,
             
         }

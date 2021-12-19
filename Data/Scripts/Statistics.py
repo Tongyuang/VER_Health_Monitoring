@@ -12,7 +12,6 @@
 import sys
 
 import pickle
-from timeit import main
 import numpy  as np
 
 sys.path.append('../../')
@@ -50,9 +49,13 @@ def GenStatistics():
         for mod in modes:
             print("mode:",mod)
             for key in data[mod].keys():
-                print("key:{},shape:{}".format(key,data[mod][key].shape) if type(data[mod][key])==np.ndarray else \
-                "key:{},value:{}".format(key,data[mod][key]))
-        
+                if (type(data[mod][key])==np.ndarray):
+                    
+                    print("key:{},shape:{}".format(key,data[mod][key].shape))
+                    if key=='reg_lbls':
+                        print("anger frac:{:.4f}".format(len(data[mod][key][data[mod][key]==-1])/len(data[mod][key])))
+                else:
+                    print("key:{},value:{}".format(key,data[mod][key]))
         print("-"*20)
         
 if __name__ == '__main__':

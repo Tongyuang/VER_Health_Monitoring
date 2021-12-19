@@ -45,7 +45,7 @@ class Trainer():
         self.datapre_config = DataPreConfig()
         self.workdir = self.datapre_config.WORK_dir
 
-        self.criterion = nn.L1Loss() if self.mode=='reg' else nn.CrossEntropyLoss()
+        self.criterion = nn.SmoothL1Loss() if self.mode=='reg' else nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(params=self.model.parameters(),lr=self.model_config.ModelParas['learning_rate'])
 
         self.logger_config = Logger_Config()
@@ -89,15 +89,17 @@ class Trainer():
             self.logger.info("{}:{}".format(key,self.model_config.ModelParas[key]))  
     
     def do_train(self,device):
+        
         epochs, best_epoch = 0, 0
         min_eval_loss = 1e6
         
         self.log_config()
         while(True):
+            self.model.train()
             y_pred,y_true = list(),list()
             epochs += 1
             losses = []
-            self.model.train()
+            
             train_loss = 0.0
             with tqdm(self.dataloader['train']) as td:
                 for batch_data in td:
@@ -111,11 +113,10 @@ class Trainer():
                         # reshape
                         input = input.view((input.shape[0],1,input.shape[-1]))
                         
-                    lbl = batch_data['reg_lbl'].to('cpu')
+                    lbl = batch_data['reg_lbl']
                     if self.mode=='cls':
                         lbl = self.metrics.three_classifier(lbl) # [0,1,2]
-                    lbl = lbl.view(-1)
-                    lbl = lbl.to(device, dtype=torch.int64)                    
+                    lbl = lbl.view(-1).to(device)            
                         
                     # to device
                     input = input.to(device)
@@ -124,7 +125,7 @@ class Trainer():
                     self.optimizer.zero_grad()
                     # forward
                     outputs = self.model(input)
-                    loss = self.criterion(outputs,lbl)
+                    loss = self.criterion(outputs.view(-1),lbl)
                     # update
                     loss.backward()
                     self.optimizer.step()
@@ -139,7 +140,11 @@ class Trainer():
 
             # evaluate
             pred, true = torch.cat(y_pred), torch.cat(y_true)
-            pred = self.metrics.onehot2cls(pred)
+            if self.mode=='cls': # preds shape = (batch,3)
+                pred = self.metrics.onehot2cls(pred)
+            else: # reg, preds shape (batch,1)
+                pred = self.metrics.three_classifier(pred) # [0,1,2]
+                true = self.metrics.three_classifier(true)
             train_results = self.metrics.metrics(pred,true)
             output_str = self.get_logger_str(train_results)
             self.logger.info(output_str)
@@ -190,21 +195,17 @@ class Trainer():
                         # reshape
                         input = input.view((input.shape[0],1,input.shape[-1]))
                     
-                    if self.mode=='reg':
-                        lbl = batch_data['reg_lbl'].to('cpu')  
-                        lbl = self.metrics.three_classifier(lbl)
-                        lbl = lbl.to(device)
-                    else:
-                        lbl = batch_data['cls_lbl'].to('cpu')
-                        lbl = lbl.view(-1)
-                        lbl = lbl.to(device, dtype=torch.int64)
+                    lbl = batch_data['reg_lbl']
+                    if self.mode=='cls':
+                        lbl = self.metrics.three_classifier(lbl) # [0,1,2]
+                    lbl = lbl.view(-1).to(device)       
                         
                     # to device
                     input = input.to(device)
                     # forward
                     outputs = self.model(input)
                     # loss
-                    loss = self.criterion(outputs,lbl)
+                    loss = self.criterion(outputs.view(-1),lbl)
                     # results
                     eval_loss += loss.item()
                     y_pred.append(outputs.cpu())
@@ -215,9 +216,12 @@ class Trainer():
             self.logger.info("EVALUATING: loss: %.4f",eval_loss)
 
             # evaluate
-            pred, true = torch.cat(y_pred), torch.cat(y_true)
-            pred = self.metrics.onehot2cls(pred)
-
+            pred, true = torch.cat(y_pred), torch.cat(y_true) 
+            if self.mode=='cls': # preds shape = (batch,3)
+                pred = self.metrics.onehot2cls(pred)
+            else: # reg, preds shape (batch,1)
+                pred = self.metrics.three_classifier(pred) # [0,1,2]
+                true = self.metrics.three_classifier(true)
             valid_results = self.metrics.metrics(pred,true)
             output_str = self.get_logger_str(valid_results)
            
