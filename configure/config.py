@@ -133,7 +133,7 @@ class Model_ATFN_Config():
             
             'activation':'leaky_relu', # must in ['relu','leaky_relu','tanh']
             'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
-            'output_activation_for_classification':'relu',
+            'output_activation_for_classification':'sigmoid',
             
             'learning_rate': 5e-3,
             'weight_decay': 1e-4,
