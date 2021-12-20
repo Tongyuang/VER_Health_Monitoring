@@ -55,15 +55,9 @@ class SubNet(nn.Module):
             self.activation = F.leaky_relu
         elif self.activation_mode == 'tanh':
             self.activation = torch.tanh
-<<<<<<< HEAD
-        elif self.activation_mode == 'sigmoid':
-            self.activation = torch.sigmoid
-            
-=======
         elif self.output_activation_mode == 'sigmoid':
             self.output_activation = torch.sigmoid
                         
->>>>>>> e355fab230eafcfe09cd4ba60c945518eee2cb15
         self.linear = nn.Linear(in_size,out_size)
         
     def forward(self, x):

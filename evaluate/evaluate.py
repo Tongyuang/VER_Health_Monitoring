@@ -95,7 +95,7 @@ if __name__ == '__main__':
     input = preprocessor(wav_list)
     print(input.shape)
     
-    model_save_dir = "/Users/tongyuang/study/graduate_yr1/course/SPDM_AIoT/bighw/source/VER/results/best_models/2021-12-19-06-31-35-ACN-cls-best.pt"
+    model_save_dir = "/home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-20-03-52-41-ACN-cls-best.pt"
     model_name = "ACN"
     
     evaluator = Evaluator(model_save_dir=model_save_dir,
