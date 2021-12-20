@@ -75,8 +75,9 @@ class SubConvNet(nn.Module):
             self.activation = F.leaky_relu
         elif self.activation_mode == 'tanh':
             self.activation = torch.tanh
-        elif self.activation_mode == 'sigmoid':
-            self.activation = torch.sigmoid            
+        elif self.output_activation_mode == 'sigmoid':
+            self.output_activation = torch.sigmoid
+                                
     def forward(self,x):
         '''
         Args:

@@ -161,8 +161,8 @@ class Model_ACN_Config():
             # output
             'output_hidden_dim':8*256, # 
             'output_dropout': 0.2,
-            'output_activation':'tanh', # must in ['relu','leaky_relu','tanh','sigmoid']
-            'output_activation_for_classification':'sigmoid',
+            'output_activation':'tanh', # must in ['relu','leaky_relu','tanh']
+            'output_activation_for_classification':'relu',
             
             'learning_rate': 1e-5,
             'weight_decay': 1e-4,
