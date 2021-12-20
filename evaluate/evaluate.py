@@ -74,7 +74,7 @@ class ATFN_Evaluator():
 
 if __name__ == '__main__':
     metrics = Metrics('reg')
-    model_save_dir = ('/home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-11-29-05-09-12-ATFN-best.pt')
+    model_save_dir = ('/home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-20-03-37-30-ACN-cls-best.pt')
     dataloader = AudioDataLoader()
     evaluator = ATFN_Evaluator(model_save_dir,dataloader)
     

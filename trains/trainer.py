@@ -129,6 +129,7 @@ class Trainer():
                     self.optimizer.zero_grad()
                     # forward
                     outputs = self.model(input)
+                    
                     loss = self.criterion(outputs,lbl)
                     # update
                     loss.backward()

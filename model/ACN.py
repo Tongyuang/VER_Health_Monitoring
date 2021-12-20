@@ -75,7 +75,8 @@ class SubConvNet(nn.Module):
             self.activation = F.leaky_relu
         elif self.activation_mode == 'tanh':
             self.activation = torch.tanh
-                    
+        elif self.activation_mode == 'sigmoid':
+            self.activation = torch.sigmoid            
     def forward(self,x):
         '''
         Args:
@@ -124,6 +125,8 @@ class ACN(nn.Module):
             self.output_activation = F.leaky_relu
         elif self.output_activation_mode == 'tanh':
             self.output_activation = torch.tanh
+        elif self.output_activation_mode == 'sigmoid':
+            self.output_activation = torch.sigmoid
             
     def conv_layer_init(self):
         assert len(self.channels) > 0
