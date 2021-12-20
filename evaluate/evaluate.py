@@ -91,9 +91,8 @@ def preprocessor(wav_dir_list,feature_dim=562):
     
 
 if __name__ == '__main__':
-    wav_list = ["../dataset/IEMOCAP/Ses01F_impro01_F000.wav"]
+    wav_list = recorder.start_recording(abs_root='./usr_cases/',usr_cases=1)
     input = preprocessor(wav_list)
-    print(input.shape)
     
     model_save_dir = "/home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-20-03-52-41-ACN-cls-best.pt"
     model_name = "ACN"
