@@ -1,0 +1,4 @@
+analysing...
+This Model has 460578 parameters
+wav_0,anger probability: 0.7928,activation level:1.0553
+evaluation time: 48.7771 ms

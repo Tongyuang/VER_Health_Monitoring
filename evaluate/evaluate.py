@@ -11,8 +11,8 @@
 # here put the import lib
 
 import os
+from numba.core.decorators import generated_jit
 import numpy as np
-from tqdm import tqdm
 import librosa
 import sys
 sys.path.append('../')
@@ -30,7 +30,19 @@ import torch
 
 from Data.DataPre import DataPreProcessor
 
+class Logger(object): # print on the screen and write in a file
+    def __init__(self,filename):
+        self.filename = filename
+        self.terminal = sys.stdout
+        self.log = open(self.filename, "a")
+        
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
 
+    def flush(self):
+        pass
+    
 class Evaluator():
     
     def __init__(self,model_save_dir,model_name):
@@ -85,22 +97,62 @@ def preprocessor(wav_dir_list,feature_dim=562):
     return output
 
 
-            
+def get_pred_results(model_output):
+    '''
+    args:
+        input: model_output: torch.tensor(batch_size,num_classes)
+        output: anger percentage
+    '''       
+    model_output.detach().numpy()
+    ret = np.zeros((model_output.shape[0],2))
+    for i in range(model_output.shape[0]):
+        ret[i][0] = model_output[i][0]/(model_output[i][0]+model_output[i][1]) # prob
+        ret[i][1] = model_output[i][0]+model_output[i][1] # activation level
+    return ret
     
-    
-    
+def re_normalize(results):
+    '''
+    results[0,:] anger probability
+    results[1,:] anger activation level
+    '''
+    low_thres = np.mean(results,axis=0)[0]-1.5*np.std(results,axis=0)[0]
+    for i in range(results.shape[0]):
+        results[i][0] = (results[i][0]-low_thres)/(1-low_thres)
+        if results[i][0]<0:
+            results[i][0] = 0.5*np.random.rand()
 
 if __name__ == '__main__':
-    wav_list = recorder.start_recording(abs_root='./usr_cases/',usr_cases=1)
+
+    
+    name,sex,wav_list = recorder.start_recording(abs_root='./usr_cases/',usr_cases=12)
+    filename = os.path.join('./usr_cases/',name,'statistics.txt')
+
+    
+    '''
+    name = "amo"
+    sex = "f"
+    wav_list = ["./usr_cases/{}/{}_{}.wav".format(name,name,i) for i in range(12)]
+    filename = "./usr_cases/{}/statistics.txt".format(name)
+    '''
+    sys.stdout = Logger(filename)
+
+    
+    print("analysing...")
     input = preprocessor(wav_list)
     
-    model_save_dir = "/home/tongyuang/code/VER_Health_Monitoring/results/best_models/2021-12-20-03-52-41-ACN-cls-best.pt"
+    model_save_dir = "../results/best_models/2021-12-20-03-52-41-ACN-cls-best.pt"
     model_name = "ACN"
     
     evaluator = Evaluator(model_save_dir=model_save_dir,
                           model_name = model_name)
     
     output,time_interval = evaluator.forward(input)
+    results = get_pred_results(output)
+    if sex=="f":
+        re_normalize(results)
+    for i in range(len(results)):
+
+        print("wav_{},anger probability: {:.4f},activation level:{:.4f}".format(i,results[i][0],results[i][1]))
     
-    print(output,time_interval)
+    print("evaluation time: {:.4f} ms".format(time_interval*1000))
 

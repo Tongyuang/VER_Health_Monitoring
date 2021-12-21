@@ -1,0 +1,15 @@
+analysing...
+This Model has 460578 parameters
+wav_0,anger probability: 0.5795,activation level:0.9854
+wav_1,anger probability: 0.1815,activation level:0.9931
+wav_2,anger probability: 0.4871,activation level:0.9609
+wav_3,anger probability: 0.2779,activation level:0.9890
+wav_4,anger probability: 0.1442,activation level:1.0048
+wav_5,anger probability: 0.3144,activation level:1.0107
+wav_6,anger probability: 0.5623,activation level:0.9903
+wav_7,anger probability: 0.7174,activation level:0.9689
+wav_8,anger probability: 0.1021,activation level:1.0085
+wav_9,anger probability: 0.3930,activation level:0.9858
+wav_10,anger probability: 0.1965,activation level:1.0244
+wav_11,anger probability: 0.2410,activation level:1.0062
+evaluation time: 92.3371 ms
