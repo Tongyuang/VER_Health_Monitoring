@@ -16,6 +16,8 @@ We first train the model offline. To be specific, we train the CNN model on two 
 <div align="center">
 <img src="./fig/framework.png">
 </div>
+
+
 ## Machine Learning Model
 
 Firstly, we collect both Chinese and English audio datasets with labeled emotions. Secondly, we extract hidden features from those audio pieces. Finally, we used a lite 1-D Convolution-Neural-Network (CNN) to classify these features into different emotions. For simplicity, we only care about whether the audio piece belongs to anger or non-anger, so it turns out into a 2-class classification task.
