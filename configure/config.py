@@ -63,6 +63,7 @@ class DataPreConfig():
         self.feature_statistics_dir = os.path.join(self.WORK_dir,'Data','Scripts','Statistics_All.txt')
 
         self.num_classes = 2
+        
 class Emoconfig():
     def __init__(self):
         self.Annotation = {

@@ -68,10 +68,14 @@ def start_recording(abs_root = './',usr_cases=10):
     if os.path.exists(usr_root):
         shutil.rmtree(usr_root) 
     
+    sex = str(input('male(m) or female(f)? m or f: '))
+    while(sex not in ["m","f"]):
+        sex = str(input('male(m) or female(f)? m or f: '))
     os.mkdir(usr_root)
     
     ret = [] # absolute dir
-    for i in range(usr_cases):
+    i = 0
+    while(i<usr_cases):
         rec = Recorder()
         
         num = str(input("press 1 to start:"))
@@ -85,14 +89,21 @@ def start_recording(abs_root = './',usr_cases=10):
         while(num!="2"):
             num = str(input("press 2 to terminate:"))     
         rec.stop()
-        toc = time.time()
-        print("successfully get a record of length {:.4f} s.".format(toc-tic))
-        output_file = "{}_{}.wav".format(name,i)
-        rec.save(os.path.join(usr_root,output_file))
-        ret.append(os.path.join(usr_root,output_file))
-    return ret
+        num = str(input("sure to save? y or n: "))
+        while(num not in ["y","n"]):
+           num = str(input("sure to save? y or n: "))
+           
+        if num=="y":
+            toc = time.time()
+            print("successfully get a record of length {:.4f} s.".format(toc-tic))
+            output_file = "{}_{}.wav".format(name,i)
+            rec.save(os.path.join(usr_root,output_file))
+            ret.append(os.path.join(usr_root,output_file))
+            i += 1
+            
+    return name,sex,ret
 
 if __name__ == "__main__":
 
-    ret = start_recording(usr_cases=10)
+    ret = start_recording(usr_cases=12)
     print(ret)

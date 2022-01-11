@@ -76,7 +76,7 @@ class Evaluator():
         self.model.eval()
         input = torch.tensor(input)
         input = input.to(self.device,dtype=torch.float32)
-        input = input.view((input.shape[0],1,input.shape[-1]))
+        input = input.view((input.shape[0],1,input.shape[-1])) # (batch_size,1,feature_dim)
         
         tic = time.time()
         output = self.model(input)
@@ -105,7 +105,9 @@ def get_pred_results(model_output):
     '''       
     model_output.detach().numpy()
     ret = np.zeros((model_output.shape[0],2))
+    
     for i in range(model_output.shape[0]):
+        print(model_output[i][0],model_output[i][1])
         ret[i][0] = model_output[i][0]/(model_output[i][0]+model_output[i][1]) # prob
         ret[i][1] = model_output[i][0]+model_output[i][1] # activation level
     return ret
@@ -124,19 +126,19 @@ def re_normalize(results):
 if __name__ == '__main__':
 
     
-    name,sex,wav_list = recorder.start_recording(abs_root='./usr_cases/',usr_cases=12)
-    filename = os.path.join('./usr_cases/',name,'statistics.txt')
+    #name,sex,wav_list = recorder.start_recording(abs_root='./usr_cases/',usr_cases=12)
+    #filename = os.path.join('./usr_cases/',name,'statistics.txt')
 
     
     '''
-    name = "amo"
-    sex = "f"
+    name = "ziqi"
+    sex = "m"
     wav_list = ["./usr_cases/{}/{}_{}.wav".format(name,name,i) for i in range(12)]
     filename = "./usr_cases/{}/statistics.txt".format(name)
-    '''
     sys.stdout = Logger(filename)
-
-    
+    '''
+    wav_list = ["./test/record.wav"]
+    sex = "m"
     print("analysing...")
     input = preprocessor(wav_list)
     
