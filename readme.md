@@ -33,7 +33,7 @@ We integrate these two datasets, extracting all the audio data and the emotion l
 
 Emotion recognition tasks usually have multimodal input, including video, image, audio and so on. Each modal may have its own encoder. For Audio, the most common encoder are linear layers or 1-D Convolutional layers. In many sound-based machine learning models, the 1-D convolutional layers are applied since it has been proven that can extract the hidden features in sound waves. 
 
-Here, we empirically choose 1-D CNN as the baseline model. It contains 7 convolutional layers, after these layers, a linear layer is applied for output the prediction. The Model's structure is shown in fig \ref{Fig:Model}. This model have 460578 parameters, we generate a lite model for mobile phone of size 3M, which is suitable for a lite app.
+Here, we empirically choose 1-D CNN as the baseline model. It contains 7 convolutional layers, after these layers, a linear layer is applied for output the prediction. The Model's structure is shown below. This model have 460578 parameters, we generate a lite model for mobile phone of size 3M, which is suitable for a lite app.
 
 <div align="center">
 <img src="./fig/model.png">
